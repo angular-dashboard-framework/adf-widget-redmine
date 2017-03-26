@@ -1,0 +1,18 @@
+<table st-table="rowCollection" class="table table-striped">
+  <thead>
+  <tr>
+    <th ng-if="vm.config.columns.id.show">ID</th>
+    <th ng-if="vm.config.columns.tracker.show">Tracker</th>
+    <th ng-if="vm.config.columns.status.show">Status</th>
+    <th ng-if="vm.config.columns.subject.show">Subject</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="issue in vm.issues">
+    <td ng-if="vm.config.columns.id.show"><a href={{"http://www.redmine.org/issues/"+issue.id}}>{{issue.id}}</a></td>
+    <td ng-if="vm.config.columns.tracker.show">{{issue.tracker.name}}</td>
+    <td ng-if="vm.config.columns.status.show">{{issue.status.name}}</td>
+    <td ng-if="vm.config.columns.subject.show">{{issue.subject}}</td>
+  </tr>
+  </tbody>
+</table>
