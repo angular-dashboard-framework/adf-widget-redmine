@@ -2,7 +2,7 @@
   <div class="form-group">
     <label for="project">Project</label>
     <select name="project" id="project" class="form-control" ng-model="config.project">
-      <option value="">All</option>
+      <option value="All">All</option>
       <option ng-repeat="project in vm.projects | orderBy: 'name'" value="{{project.id}}">{{project.name}}</option>
     </select>
   </div>

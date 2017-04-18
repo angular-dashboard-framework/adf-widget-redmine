@@ -18,7 +18,7 @@ angular.module('adf.widget.redmine')
 
     function generateIssuesParameter(data) {
       var params='?';
-      if(data.project) {
+      if(data.project && data.project !== "All") {
         params+='&project_id='+data.project;
       }
       if(data.assigned_to_id) {
