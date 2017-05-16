@@ -17,8 +17,10 @@ module.exports = function(config) {
     files: [
       'components/angular/angular.js',
       'components/angular-mocks/angular-mocks.js',
+      'src/main/redmine.js',
+      'src/main/service.js',
       'src/main/**/*.js',
-      'src/test/*Spec.js'
+      'src/test/**/*Spec.js'
     ],
 
 
