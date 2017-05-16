@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('adf.widget.redmine', ['adf.provider', 'smart-table'])
+angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant("redmineEndpoint", "http://www.redmine.org/")
   .config(function(dashboardProvider){
 
-    var edit = {
+    var editIssues = {
       templateUrl: '{widgetsPath}/redmine/src/issues/edit/edit.html',
       controller: 'editController',
       controllerAs: 'vm',
@@ -16,10 +16,22 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table'])
       }
     };
 
+    var editChart = {
+      templateUrl: '{widgetsPath}/redmine/src/chart/edit/edit.html',
+      controller: 'editController',
+      controllerAs: 'vm',
+      resolve: {
+        /** @ngInject **/
+        projects: function(redmineService){
+          return redmineService.getProjects();
+        }
+      }
+    };
+
     dashboardProvider
-      .widget('redmineIssues', {
+      .widget('redmine-issues', {
         title: 'Redmine Issues',
-        description: 'Show Issues of an given Redmine Instance.',
+        description: 'Shows Issues of a given Redmine Instance',
         templateUrl: '{widgetsPath}/redmine/src/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
@@ -29,6 +41,22 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table'])
             return redmineService.getIssues(config);
           }
         },
-        edit: edit
+        edit: editIssues
+      });
+
+      dashboardProvider
+      .widget('redmine-chart', {
+        title: 'Redmine Chart',
+        description: 'Displays a burnup or burndown chart',
+        templateUrl: '{widgetsPath}/redmine/src/chart/view.html',
+        controller: 'ChartController',
+        controllerAs: 'vm',
+        resolve: {
+          /** @ngInject **/
+          issues: function(redmineService, config){
+            return redmineService.getIssues(config);
+          }
+        },
+        edit: editChart
       });
   });
