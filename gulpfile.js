@@ -83,7 +83,7 @@ gulp.task('css', function(){
 });
 
 gulp.task('js', function() {
-  gulp.src(['src/**/*.js', 'src/**/*.html'])
+  gulp.src(['src/main/**/*.js', 'src/main/**/*.html'])
       .pipe($.if('*.html', $.minifyHtml()))
       .pipe($.if('*.html', $.angularTemplatecache(pkg.name + '.tpl.js', templateOptions)))
       .pipe($.angularFilesort())
