@@ -2,27 +2,27 @@
 
 angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant("redmineEndpoint", "http://www.redmine.org/")
-  .config(function(dashboardProvider){
+  .config(function (dashboardProvider) {
 
     var editIssues = {
-      templateUrl: '{widgetsPath}/redmine/src/issues/edit/edit.html',
+      templateUrl: '{widgetsPath}/redmine/src/main/issues/edit/edit.html',
       controller: 'editIssuesController',
       controllerAs: 'vm',
       resolve: {
         /** @ngInject **/
-        projects: function(redmineService){
+        projects: function (redmineService) {
           return redmineService.getProjects();
         }
       }
     };
 
     var editChart = {
-      templateUrl: '{widgetsPath}/redmine/src/chart/edit/edit.html',
+      templateUrl: '{widgetsPath}/redmine/src/main/chart/edit/edit.html',
       controller: 'editChartController',
       controllerAs: 'vm',
       resolve: {
         /** @ngInject **/
-        projects: function(redmineService){
+        projects: function (redmineService) {
           return redmineService.getProjects();
         }
       }
@@ -32,28 +32,28 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
       .widget('redmine-issues', {
         title: 'Redmine Issues',
         description: 'Shows Issues of a given Redmine Instance',
-        templateUrl: '{widgetsPath}/redmine/src/issues/view.html',
+        templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
         resolve: {
           /** @ngInject **/
-          issues: function(redmineService, config){
+          issues: function (redmineService, config) {
             return redmineService.getIssues(config);
           }
         },
         edit: editIssues
       });
 
-      dashboardProvider
+    dashboardProvider
       .widget('redmine-chart', {
         title: 'Redmine Chart',
         description: 'Displays a burnup or burndown chart',
-        templateUrl: '{widgetsPath}/redmine/src/chart/view.html',
+        templateUrl: '{widgetsPath}/redmine/src/main/chart/view.html',
         controller: 'ChartController',
         controllerAs: 'vm',
         resolve: {
           /** @ngInject **/
-          issues: function(redmineService, config){
+          issues: function (redmineService, config) {
             return redmineService.getIssues(config);
           }
         },
