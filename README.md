@@ -28,6 +28,11 @@ gulp
 
 The compiled and optimized files can be found in the dist directory.
 
+#### Excecute the tests 
+```
+karma start
+```
+
 #### Other build goals
 
 Each goal can be used as parameter for the gulp command.
