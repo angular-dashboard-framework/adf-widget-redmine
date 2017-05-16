@@ -22,13 +22,14 @@
   "description": "description",
   "dependencies": {
     "angular-dashboard-framework": ">=0.10",
-    "angular-smart-table": "~2.1.8"
+    "angular-smart-table": "~2.1.8",
+    "angular-chart.js": "^1.1.1"
   },
   "devDependencies": {
     "angular-local-storage": ">=0.2"
   },
   "overrides": {
-    "bootstrap" : {
+    "bootstrap": {
       "main": [
         "less/bootstrap.less",
         "dist/css/bootstrap.css",
