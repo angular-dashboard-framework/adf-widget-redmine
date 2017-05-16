@@ -7,23 +7,6 @@ angular.module('adf.widget.redmine')
     vm.config = config;
     vm.issues = issues;
 
-    var calculateOpenIssuesPerDay = function (from, to, issues) {
-      // order issues by creation date
-      var openIssues = []; // inv: ordered by "closed_on"
-      var dates = [];// x-values
-      var values = [];// y-values
-      while (from.getTime() <= to.getTime()) {
-        moveNewOpenIssues(issues, openIssues, from);
-        removeNewClosedIssues(openIssues, from);
-        dates.push(from.toDateString());
-        values.push(openIssues.length)
-        from.setDate(from.getDate() + 1); // next day
-      }
-      return {
-        dates: dates,
-        values: values
-      }
-    }
     var moveNewOpenIssues = function (allIssues, openIssues, date) {
       //console.log("allIssues.length "+allIssues.length);
       for (var i = 0; i < allIssues.length; i++) {
@@ -37,7 +20,7 @@ angular.module('adf.widget.redmine')
           break;
         }
       }
-    }
+    };
 
     var removeNewClosedIssues = function (openIssues, date) {
       for (var i = 0; i < openIssues.length; i++) {
@@ -51,7 +34,27 @@ angular.module('adf.widget.redmine')
           }
         }
       }
-    }
+    };
+
+
+    var calculateOpenIssuesPerDay = function (from, to, issues) {
+      // order issues by creation date
+      var openIssues = []; // inv: ordered by "closed_on"
+      var dates = [];// x-values
+      var values = [];// y-values
+      while (from.getTime() <= to.getTime()) {
+        moveNewOpenIssues(issues, openIssues, from);
+        removeNewClosedIssues(openIssues, from);
+        dates.push(from.toDateString());
+        values.push(openIssues.length);
+        from.setDate(from.getDate() + 1); // next day
+      }
+      return {
+        dates: dates,
+        values: values
+      };
+    };
+
 
     if (vm.config.timespan && vm.config.timespan.fromDateTime && vm.config.timespan.toDateTime) {
       var from = new Date(vm.config.timespan.fromDateTime);
@@ -74,15 +77,15 @@ angular.module('adf.widget.redmine')
         },
         legend: {
           display: true,
-          position: "bottom"
+          position: 'bottom'
         }
       };
 
       vm.chart = {
         labels: generatedData.dates,
         data: [generatedData.values],
-        series: ["Project ..."],
-        class: "chart-line",
+        series: ['Project ...'],
+        class: 'chart-line',
         options: options
       };
     }

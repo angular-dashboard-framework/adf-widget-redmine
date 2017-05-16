@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js', 'ui.bootstrap.datepicker'])
-  .constant("redmineEndpoint", "http://www.redmine.org/")
+  .constant('redmineEndpoint', 'http://www.redmine.org/')
   .config(function (dashboardProvider) {
 
     var editIssues = {

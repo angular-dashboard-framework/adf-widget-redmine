@@ -36,7 +36,7 @@ angular.module('adf.widget.redmine')
           return allIssues;
         }
 
-      })
+      });
     }
 
     function collectPageIssues(params, offset){
