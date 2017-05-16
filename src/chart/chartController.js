@@ -30,19 +30,19 @@ angular.module('adf.widget.redmine')
         var createDate = new Date(allIssues[i].created_on);
         //console.log("createDate: "+createDate.toDateString());
         if (createDate.getTime() <= date.getTime()) {
-          openIssues.push(allIssues[i]);// should be still sorted
+          openIssues.push(allIssues[i]);
           allIssues.splice(i, 1);
           i--;
         } else {
-          //break;
+          break;
         }
       }
     }
+
     var removeNewClosedIssues = function (openIssues, date) {
       for (var i = 0; i < openIssues.length; i++) {
         if (openIssues[i].closed_on) {
           var closeDate = new Date(openIssues[i].closed_on);
-          //console.log("closeDate: " + closeDate.toDateString());
           if (closeDate.getTime() <= date.getTime()) {
             openIssues.splice(i, 1);
             i--;
@@ -53,35 +53,37 @@ angular.module('adf.widget.redmine')
       }
     }
 
-    var from = new Date(vm.config.timespan.fromDateTime);
-    var to = new Date(vm.config.timespan.toDateTime);
-    var generatedData = calculateOpenIssuesPerDay(from, to, issues);
+    if (vm.config.timespan && vm.config.timespan.fromDateTime && vm.config.timespan.toDateTime) {
+      var from = new Date(vm.config.timespan.fromDateTime);
+      var to = new Date(vm.config.timespan.toDateTime);
+      var generatedData = calculateOpenIssuesPerDay(from, to, issues);
 
-    var options = {
-      scales: {
-        yAxes: [
-          {
-            id: 'y-axis-1',
-            display: true,
-            position: 'left',
-            scaleLabel: {
+      var options = {
+        scales: {
+          yAxes: [
+            {
+              id: 'y-axis-1',
               display: true,
-              labelString: 'Open Issues'
+              position: 'left',
+              scaleLabel: {
+                display: true,
+                labelString: 'Open Issues'
+              }
             }
-          }
-        ]
-      },
-      legend: {
-        display: true,
-        position: "bottom"
-      }
-    };
+          ]
+        },
+        legend: {
+          display: true,
+          position: "bottom"
+        }
+      };
 
-    vm.chart = {
-      labels: generatedData.dates,
-      data: [generatedData.values],
-      series: ["Project ..."],
-      class: "chart-line",
-      options: options
-    };
+      vm.chart = {
+        labels: generatedData.dates,
+        data: [generatedData.values],
+        series: ["Project ..."],
+        class: "chart-line",
+        options: options
+      };
+    }
   });

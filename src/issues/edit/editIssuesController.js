@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .controller('editController', function(projects, config){
+  .controller('editIssuesController', function(projects, config){
     var vm = this;
+    console.log("config: "+config);
     vm.possibleColumns = {
       "id":{"name":"ID", "show": true},
       "tracker":{"name":"Tracker","show": true},

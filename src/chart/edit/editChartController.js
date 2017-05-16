@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .controller('editController', function (projects, config) {
+  .controller('editChartController', function (projects, config) {
     var vm = this;
     vm.config = config;
 
     if (angular.equals({}, config)) {
       config.project = "";
-      config.assigned_to_id = "me";
       config.showClosed = true;
     }
 

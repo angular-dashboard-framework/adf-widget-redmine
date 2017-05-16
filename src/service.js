@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .factory('redmineService', function($http, redmineEndpoint){
+  .factory('redmineService', function($http, redmineEndpoint, $q){
 
     function extractData(response){
       return response.data;
@@ -11,27 +11,42 @@ angular.module('adf.widget.redmine')
       return $http.get(redmineEndpoint+param).then(extractData);
     }
 
-    function getIssues(config){
+    function getIssues(config) {
       var allIssues = [];
-      var params=generateIssuesParameter(config);
-      var limit = config.limit ? config.limit : Number.MAX_SAFE_INTEGER;
-      return collectPageIssues(params, allIssues, 0, limit);
-    }
-
-    function collectPageIssues(params, allIssues, offset, limit){
-      return request('issues.json'+params+'&offset='+offset).then(function(issues){
-        angular.forEach(issues.issues, function(issue){
+      var params = generateIssuesParameter(config);
+      var limit = config.limit ? config.limit : 200;
+      return collectPageIssues(params, 0).then(function (issues) {
+        angular.forEach(issues.issues, function (issue) {
           allIssues.push(issue);
         });
-        if(issues.total_count > allIssues.length && allIssues.length < limit) {
-          return collectPageIssues(params, allIssues, offset+100, limit);
+        var requests = [];
+        for (var i = 100; i < issues.total_count && i < limit; i = i + 100) {
+          requests.push(collectPageIssues(params, i));
         }
-        return allIssues;
+        if (params.length > 0) {
+          return $q.all(requests).then(function (responses) {
+            angular.forEach(responses, function (response) {
+              angular.forEach(response.issues, function (issue) {
+                allIssues.push(issue);
+              });
+            });
+            return allIssues;
+          });
+        } else {
+          return allIssues;
+        }
+
+      })
+    }
+
+    function collectPageIssues(params, offset){
+      return request('issues.json'+params+'&offset='+offset).then(function(issues){
+        return issues;
       });
     }
 
     function generateIssuesParameter(data) {
-      var params = '?limit=100';
+      var params = '?limit=100&sort=created_on';
       if (data.project && data.project !== "All") {
         params += '&project_id=' + data.project;
       }
@@ -41,7 +56,7 @@ angular.module('adf.widget.redmine')
       if (data.showClosed) {
         params += '&status_id=*';
       }
-      if (data.timespan.fromDateTime && data.timespan.toDateTime) {
+      if (data.timespan && data.timespan.fromDateTime && data.timespan.toDateTime) {
         var fromDate = new Date(data.timespan.fromDateTime);
         var toDate = new Date(data.timespan.toDateTime);
 

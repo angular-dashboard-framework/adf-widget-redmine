@@ -6,7 +6,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
 
     var editIssues = {
       templateUrl: '{widgetsPath}/redmine/src/issues/edit/edit.html',
-      controller: 'editController',
+      controller: 'editIssuesController',
       controllerAs: 'vm',
       resolve: {
         /** @ngInject **/
@@ -18,7 +18,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
 
     var editChart = {
       templateUrl: '{widgetsPath}/redmine/src/chart/edit/edit.html',
-      controller: 'editController',
+      controller: 'editChartController',
       controllerAs: 'vm',
       resolve: {
         /** @ngInject **/
