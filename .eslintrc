@@ -16,5 +16,9 @@
   "env": {
     "jasmine": true
   },
+  "globals": {
+    "angular": 1
+  },
+  "plugins": ["angular", "jasmine"],
   "extends": "eslint:recommended"
 }
