@@ -11,6 +11,18 @@ angular.module('adf.widget.redmine')
       return $http.get(redmineEndpoint+param).then(extractData);
     }
 
+    function getProjects(){
+      return request('projects.json').then(function(data){
+        return data.projects;
+      });
+    }
+
+    function getVersions(project){
+      return request('projects/'+project+'/versions.json').then(function(data){
+        return data.versions;
+      });
+    }
+
     function getIssues(config) {
       var allIssues = [];
       var params = generateIssuesParameter(config);
@@ -48,7 +60,7 @@ angular.module('adf.widget.redmine')
     function generateIssuesParameter(data) {
       var params = '?limit=100&sort=created_on';
       if (data.project && data.project !== "All") {
-        params += '&project_id=' + data.project;
+        params += '&project_id=' + angular.fromJson(data.project).id;
       }
       if (data.assigned_to_id) {
         params += '&assigned_to_id=' + data.assigned_to_id;
@@ -60,7 +72,10 @@ angular.module('adf.widget.redmine')
         var fromDate = new Date(data.timespan.fromDateTime);
         var toDate = new Date(data.timespan.toDateTime);
 
-        params += '&created_on=%3E%3C' + dateToYMD(fromDate) + '|' + dateToYMD(toDate);
+        params += '&created_on=<=' + dateToYMD(toDate);
+      }
+      if(data.filterWithVersion && data.version){
+        params += '&fixed_version_id='+angular.fromJson(data.version).id;
       }
       return params;
     }
@@ -72,14 +87,9 @@ angular.module('adf.widget.redmine')
       return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
     }
 
-    function getProjects(){
-      return request('projects.json').then(function(data){
-        return data.projects;
-      });
-    }
-
     return {
       getIssues: getIssues,
-      getProjects: getProjects
+      getProjects: getProjects,
+      getVersions: getVersions
      };
   });
