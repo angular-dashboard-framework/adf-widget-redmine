@@ -1,13 +1,24 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .controller('editChartController', function (projects, config) {
+  .controller('editChartController', function (projects, config, redmineService) {
     var vm = this;
     vm.config = config;
+    vm.filters = [
+      {id:'version',name:'Fixed Version'}
+    ]
+
 
     if (angular.equals({}, config)) {
-      config.project = "";
-      config.showClosed = true;
+      vm.config.project = "";
+      vm.config.showClosed = true;
+    }
+
+    vm.addFilter = function(filter){
+      if(filter === 'version'){
+        vm.config.filterWithVersion = true;
+      }
+      vm.filterToAdd = 'none';
     }
 
     if (!vm.config.timespan) {
@@ -76,6 +87,31 @@ angular.module('adf.widget.redmine')
 
     vm.popup2 = {
       opened: false
+    };
+
+    vm.updateVersions = function(){
+      if (vm.config.project) {
+        if (vm.config.project === 'All'){
+          vm.versions = [];
+          return;
+        }
+        redmineService.getVersions(angular.fromJson(vm.config.project).identifier).then(function (versions) {
+          console.log(versions);
+          vm.versions = versions;
+        });
+      }
+    };
+
+    vm.checkUpdates = function(){
+      if (vm.config.filterWithVersion) {
+        vm.updateVersions();
+      }
+    };
+
+    vm.updateVersionEnd =function(){
+      vm.config.timespan.toDateTime = new Date(angular.fromJson(vm.config.version).due_date);
+      var date = new Date(vm.config.timespan.toDateTime);
+      vm.config.timespan.fromDateTime = date.setDate(date.getDate()-14);
     };
 
   });

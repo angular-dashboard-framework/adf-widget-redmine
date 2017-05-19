@@ -1,11 +1,30 @@
 <form role="form">
+
+  <div class="form-group">
+    <label for="project">Filter</label>
+  </div>
   <div class="form-group">
     <label for="project">Project</label>
-    <select name="project" id="project" class="form-control" ng-model="config.project">
+    <select name="project" id="project" class="form-control" ng-model="vm.config.project" ng-change="vm.checkUpdates()">
       <option value="All">All</option>
-      <option ng-repeat="project in vm.projects | orderBy: 'name'" value="{{project.id}}">{{project.name}}</option>
+      <option ng-repeat="project in vm.projects | orderBy: 'name'" value="{{project}}">{{project.name}}</option>
     </select>
   </div>
+
+  <p class="input-group">
+    Add Filter
+    <select name="filter" id="filter" class="form-control" ng-model="vm.filterToAdd" ng-change="vm.addFilter(vm.filterToAdd)">
+      <option ng-repeat="filter in vm.filters | orderBy: 'name'" value="{{filter.id}}">{{filter.name}}</option>
+    </select>
+  </p>
+
+  <div class="form-group" ng-if="vm.config.filterWithVersion" ng-init="vm.updateVersions()"">
+    <label for="version">Fixed Version</label>
+    <select name="version" id="version" class="form-control" ng-model="vm.config.version" ng-change="vm.updateVersionEnd()">
+      <option ng-repeat="version in vm.versions | orderBy: 'name'" value="{{version}}">{{version.name}}</option>
+    </select>
+  </div>
+
   <div class="form-group">
     <label for="assgined_to_id">Assigned To</label>
     <span class="glyphicon glyphicon-info-sign" uib-tooltip="Get issues which are assigned to the given user ID.
@@ -13,6 +32,11 @@
     <input name="assigned_to_id" id="assgined_to_id" class="form-control" ng-model="config.assigned_to_id">
     </input>
   </div>
+
+  <div class="form-group">
+    <input type="checkbox" name="showIdeal" ng-model="config.showIdeal"> Show ideal line
+  </div>
+
   <div>
     <p class="input-group">
       <input class="form-control" datepicker-options="vm.dateOptions" is-open="vm.popup1.opened" ng-model="vm.config.timespan.fromDateTime"
