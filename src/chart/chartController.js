@@ -6,8 +6,13 @@ angular.module('adf.widget.redmine')
     var vm = this;
     vm.config = config;
     vm.issues = issues;
+    vm.numberAllIssues = issues.length;
 
     var calculateOpenIssuesPerDay = function (from, to, issues) {
+      var timeDiff = Math.abs(from.getTime() - to.getTime());
+      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      var idealIssuesPerDay = vm.numberAllIssues / diffDays;
+      var idealData = [];
       // order issues by creation date
       var openIssues = []; // inv: ordered by "closed_on"
       var dates = [];// x-values
@@ -16,12 +21,22 @@ angular.module('adf.widget.redmine')
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
         dates.push(from.toDateString());
-        values.push(openIssues.length)
+        var value = openIssues.length;
+        values.push(value);
+        if(vm.config.showIdeal){
+          var idealValue = vm.numberAllIssues - idealData.length*idealIssuesPerDay;
+                          console.log(idealValue);
+          idealData.push(idealValue);
+        }
         from.setDate(from.getDate() + 1); // next day
+      }
+      var valueSets = [values];
+      if(vm.config.showIdeal) {
+        valueSets.push(idealData);
       }
       return {
         dates: dates,
-        values: values
+        values: valueSets
       }
     }
     var moveNewOpenIssues = function (allIssues, openIssues, date) {
@@ -80,10 +95,15 @@ angular.module('adf.widget.redmine')
 
       vm.chart = {
         labels: generatedData.dates,
-        data: [generatedData.values],
+        data: generatedData.values,
         series: ["Project ..."],
         class: "chart-line",
         options: options
       };
+
+      if (vm.config.showIdeal){
+        vm.chart.series.push("Ideal");
+      }
+
     }
   });
