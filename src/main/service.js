@@ -118,8 +118,8 @@ angular.module('adf.widget.redmine')
       if (data.filterWithVersion && data.version) {
         params += '&fixed_version_id=' + angular.fromJson(data.version).id;
       }
-      if (data.filterWithTtracker && data.tracker) {
-        params += '&tracker_id=' + angular.fromJson(data.tracker).id;
+      if (data.filterWithTracker && data.tracker) {
+        params += '&tracker_id='+angular.fromJson(data.tracker).id;
       }
       return params;
     }

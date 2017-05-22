@@ -45,11 +45,7 @@
 
   <div class="input-group" ng-if="vm.config.filterWithTracker" ng-init="vm.updateTracker()"">
     <label for="tacker">Tracker</label>
-    <select name="trackerFilterType" id="trackerFilterType" class="form-control" ng-model="vm.config.trackerFilterType">
-      <option value="is">is</option>
-      <option value="isNot">is not</option>
-    </select>
-    <select name="tracker" id="tracker" class="form-control" ng-model="vm.config.tracker" multiple>
+    <select name="tracker" id="tracker" class="form-control" ng-model="vm.config.tracker">
       <option ng-repeat="tracker in vm.trackers | orderBy: 'name'" value="{{tracker}}">{{tracker.name}}</option>
     </select>
     <span class="input-group-btn">
