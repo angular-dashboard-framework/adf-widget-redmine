@@ -5,7 +5,9 @@ angular.module('adf.widget.redmine')
     var vm = this;
     vm.config = config;
     vm.filters = [
-      {id:'version',name:'Fixed Version'}
+      {id:'version',name:'Fixed Version'},
+      {id:'assigned',name:'Assigned to'},
+      {id:'tracker',name:'Tracker'}
     ]
 
 
@@ -17,6 +19,10 @@ angular.module('adf.widget.redmine')
     vm.addFilter = function(filter){
       if(filter === 'version'){
         vm.config.filterWithVersion = true;
+      } else if (filter === 'assigned'){
+        vm.config.filterWithAssigned = true;
+      } else if (filter === 'tracker'){
+        vm.config.filterWithTracker = true;
       }
       vm.filterToAdd = 'none';
     }
@@ -96,7 +102,6 @@ angular.module('adf.widget.redmine')
           return;
         }
         redmineService.getVersions(angular.fromJson(vm.config.project).identifier).then(function (versions) {
-          console.log(versions);
           vm.versions = versions;
         });
       }
@@ -113,5 +118,11 @@ angular.module('adf.widget.redmine')
       var date = new Date(vm.config.timespan.toDateTime);
       vm.config.timespan.fromDateTime = date.setDate(date.getDate()-14);
     };
+
+    vm.updateTracker = function(){
+      redmineService.getTrackers().then(function (trackers) {
+          vm.trackers = trackers;
+        });
+    }
 
   });
