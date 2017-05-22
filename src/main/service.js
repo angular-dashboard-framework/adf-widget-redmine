@@ -23,7 +23,6 @@ angular.module('adf.widget.redmine')
       });
     }
 
-
     function getIssues(config) {
       var params = generateGeneralIssuesParameters(config);
       var limit = config.limit ? config.limit : Number.MAX_SAFE_INTEGER;

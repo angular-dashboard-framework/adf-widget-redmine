@@ -53,9 +53,9 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
         controllerAs: 'vm',
         resolve: {
           /** @ngInject **/
-          issues: function (redmineService, config) {
+          chartData: function (chartDataService, config) {
             if(config.project) {
-                return redmineService.getIssuesForChart(config);
+                return chartDataService.getChartData(config);
             }
           }
         },
