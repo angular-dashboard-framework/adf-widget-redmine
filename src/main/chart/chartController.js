@@ -20,6 +20,20 @@ angular.module('adf.widget.redmine')
               labelString: 'Open Issues'
             }
           }
+        ],
+        xAxes: [
+          {
+            id: 'x-axis-1',
+            type: 'time', time: {
+              displayFormats: {
+                day: 'D.MMM',
+                week: 'D.MMM',
+                month: 'MMM/YY',
+                quarter: '[Q]Q - YYYY',
+                year: 'YYYY'
+              }
+            }
+          }
         ]
       },
       legend: {

@@ -25,12 +25,12 @@ angular.module('adf.widget.redmine')
       while (from.getTime() <= to.getTime()) {
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
-        dates.push(from.toDateString());
-        var value = openIssues.length;
+        var value = {x: from.toISOString(),y:openIssues.length};
         values.push(value);
         if (config.showIdeal) {
           var idealValue = numberAllIssues - idealData.length * idealIssuesPerDay;
-          idealData.push(idealValue);
+          var ideal = {x: from.toISOString(),y:idealValue};
+          idealData.push(ideal);
         }
         from.setDate(from.getDate() + 1); // next day
       }
@@ -39,7 +39,6 @@ angular.module('adf.widget.redmine')
         valueSets.push(idealData);
       }
       return {
-        dates: dates,
         values: valueSets
       }
     }
