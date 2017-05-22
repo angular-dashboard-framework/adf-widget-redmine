@@ -1,0 +1,24 @@
+{
+  "rules": {
+    "quotes": [
+      2,
+      "single"
+    ],
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "semi": [
+      2,
+      "always"
+    ]
+  },
+  "env": {
+    "jasmine": true
+  },
+  "globals": {
+    "angular": 1
+  },
+  "plugins": ["angular", "jasmine"],
+  "extends": "eslint:recommended"
+}

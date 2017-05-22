@@ -43,7 +43,7 @@ gulp.task('templates', function(){
 });
 
 gulp.task('sample', ['templates'], function(){
-  var files = gulp.src(['src/**/*.js', 'src/**/*.css', 'src/**/*.less', '.tmp/dist/*.js'])
+  var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js'])
                   .pipe($.if('*.js', $.angularFilesort()));
 
   gulp.src('sample/index.html')
@@ -59,7 +59,7 @@ gulp.task('sample', ['templates'], function(){
 });
 
 gulp.task('watch', function(){
-  gulp.watch(['src/**'], ['sample']);
+  gulp.watch(['src/main/**'], ['sample']);
 });
 
 gulp.task('serve', ['watch', 'sample'], function(){
@@ -73,7 +73,7 @@ gulp.task('serve', ['watch', 'sample'], function(){
 /** build **/
 
 gulp.task('css', function(){
-  gulp.src(['src/**/*.css', 'src/**/*.less'])
+  gulp.src(['src/main/**/*.css', 'src/main/**/*.less'])
       .pipe($.if('*.less', $.less()))
       .pipe($.concat(pkg.name + '.css'))
       .pipe(gulp.dest('dist'))
@@ -83,7 +83,7 @@ gulp.task('css', function(){
 });
 
 gulp.task('js', function() {
-  gulp.src(['src/**/*.js', 'src/**/*.html'])
+  gulp.src(['src/main/**/*.js', 'src/main/**/*.html'])
       .pipe($.if('*.html', $.minifyHtml()))
       .pipe($.if('*.html', $.angularTemplatecache(pkg.name + '.tpl.js', templateOptions)))
       .pipe($.angularFilesort())
