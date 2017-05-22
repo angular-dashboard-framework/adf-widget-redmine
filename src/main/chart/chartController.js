@@ -96,10 +96,16 @@ angular.module('adf.widget.redmine')
       vm.chart = {
         labels: generatedData.dates,
         data: generatedData.values,
-        series: ["Project ..."],
+        series: [],
         class: "chart-line",
         options: options
       };
+
+      if(vm.config.project && vm.config.project !== 'All') {
+        vm.chart.series.push(angular.fromJson(vm.config.project).name);
+      } else {
+        vm.chart.series.push("All Projects");
+      }
 
       if (vm.config.showIdeal){
         vm.chart.series.push("Ideal");
