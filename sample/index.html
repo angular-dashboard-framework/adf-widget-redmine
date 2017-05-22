@@ -75,18 +75,7 @@
        }).controller('dashboardController', function($scope, localStorageService){
          var model = localStorageService.get('widgetSampleDashboard');
          if (!model){
-           model = {
-            rows: [{
-              columns: [{
-                styleClass: 'col-md-12',
-                widgets: [{
-                  type: 'redmine',
-                  title: 'redmineTitle',
-                  config: {}
-                }]
-              }]
-            }]
-          };
+           model = {};
          }
          $scope.dashboard = {
            model: model
