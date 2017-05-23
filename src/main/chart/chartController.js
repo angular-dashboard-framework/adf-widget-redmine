@@ -6,8 +6,6 @@ angular.module('adf.widget.redmine')
     var vm = this;
     vm.config = config;
 
-    var generatedData = chartData;
-
     var options = {
       scales: {
         yAxes: [
@@ -43,8 +41,7 @@ angular.module('adf.widget.redmine')
     };
 
     vm.chart = {
-      labels: generatedData.dates,
-      data: generatedData.values,
+      data: chartData,
       series: [],
       class: "chart-line",
       options: options

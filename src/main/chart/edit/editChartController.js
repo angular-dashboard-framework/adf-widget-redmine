@@ -84,7 +84,7 @@ angular.module('adf.widget.redmine')
     function toggleMin() {
       vm.inlineOptions.minDate = vm.inlineOptions.minDate ? null : new Date();
       vm.dateOptions.minDate = vm.inlineOptions.minDate;
-    };
+    }
 
     function updateVersions() {
       if (vm.config.project) {
@@ -96,19 +96,19 @@ angular.module('adf.widget.redmine')
           vm.versions = versions;
         });
       }
-    };
+    }
 
     function checkUpdates() {
       if (vm.config.filterWithVersion) {
         vm.updateVersions();
       }
-    };
+    }
 
     function updateVersionEnd() {
       vm.config.timespan.toDateTime = new Date(angular.fromJson(vm.config.version).due_date);
       var date = new Date(vm.config.timespan.toDateTime);
       vm.config.timespan.fromDateTime = date.setDate(date.getDate() - 14);
-    };
+    }
 
     function updateTracker() {
       redmineService.getTrackers().then(function (trackers) {
