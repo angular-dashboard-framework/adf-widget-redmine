@@ -4,43 +4,41 @@ angular.module('adf.widget.redmine')
   .factory('chartDataService', function ($q, redmineService) {
 
     function getChartData(config) {
+    config.numberPoints = 50;
       return redmineService.getIssuesForChart(config).then(function (issues) {
         //if (vm.config.timespan && vm.config.timespan.fromDateTime && vm.config.timespan.toDateTime)
         var from = new Date(config.timespan.fromDateTime);
         var to = new Date(config.timespan.toDateTime);
         return calculateOpenIssuesPerDay(from, to, issues, config);
-      });
+      })
     }
 
     function calculateOpenIssuesPerDay(from, to, issues, config) {
       var timeDiff = Math.abs(from.getTime() - to.getTime());
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      var pointThinningRate = diffDays / config.numberPoints;
       var numberAllIssues = issues.length;
       var idealIssuesPerDay = numberAllIssues / diffDays;
       var idealData = [];
-      // order issues by creation date
-      var openIssues = []; // inv: ordered by "closed_on"
-      var dates = [];// x-values
-      var values = [];// y-values
+      var openIssues = [];
+      var values = [];
       while (from.getTime() <= to.getTime()) {
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
         var value = {x: from.toISOString(),y:openIssues.length};
         values.push(value);
         if (config.showIdeal) {
-          var idealValue = numberAllIssues - idealData.length * idealIssuesPerDay;
+          var idealValue = Math.round((numberAllIssues - idealData.length * idealIssuesPerDay * pointThinningRate)*100) / 100;
           var ideal = {x: from.toISOString(),y:idealValue};
           idealData.push(ideal);
         }
-        from.setDate(from.getDate() + 1); // next day
+        from.setDate(from.getDate() + pointThinningRate);
       }
       var valueSets = [values];
       if (config.showIdeal) {
         valueSets.push(idealData);
       }
-      return {
-        values: valueSets
-      }
+      return valueSets;
     }
 
     function moveNewOpenIssues(allIssues, openIssues, date) {
@@ -51,6 +49,7 @@ angular.module('adf.widget.redmine')
           allIssues.splice(i, 1);
           i--;
         } else {
+          // we can stop here, cause the issues are ordered by creation date
           break;
         }
       }
@@ -63,8 +62,6 @@ angular.module('adf.widget.redmine')
           if (closeDate.getTime() <= date.getTime()) {
             openIssues.splice(i, 1);
             i--;
-          } else {
-            //break;
           }
         }
       }
