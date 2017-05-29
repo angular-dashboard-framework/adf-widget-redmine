@@ -22,7 +22,6 @@
   "description": "description",
   "dependencies": {
     "angular-dashboard-framework": ">=0.10",
-    "angular-smart-table": "~2.1.8",
     "angular-chart.js": "^1.1.1",
     "angular-mocks": "^1.6.4"
   },
@@ -37,5 +36,8 @@
         "dist/js/bootstrap.js"
       ]
     }
+  },
+  "resolutions": {
+    "angular": "1.6.4"
   }
 }
