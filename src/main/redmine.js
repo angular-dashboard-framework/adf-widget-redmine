@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js', 'ui.bootstrap.datepicker'])
+angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker','ngTable'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
   .config(function (dashboardProvider) {
 
@@ -38,7 +38,10 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
         resolve: {
           /** @ngInject **/
           issues: function (redmineService, config) {
-            return redmineService.getIssues(config);
+            if(config.customQuery && config.project){
+              return redmineService.getIssuesByQueryId(config.customQuery, config.project);
+            }
+
           }
         },
         edit: editIssues

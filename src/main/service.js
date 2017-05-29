@@ -131,9 +131,29 @@ angular.module('adf.widget.redmine')
       return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
     }
 
+    function getCustomQueries() {
+      return request('queries.json');
+    }
+
+    function getIssuesByQueryId(queryId, projectId) {
+      return request('issues.json?query_id=' + queryId + '&project_id=' + projectId).then(function(data){
+        return data.issues;
+      });
+    }
+
+    function getRedmineEndpoint(){
+      return redmineEndpoint;
+    }
+
     function getTrackers() {
       return request('trackers.json').then(function (data) {
         return data.trackers;
+      });
+    }
+
+    function getMyIssues(){
+      return request('issues.json?assigned_to_id=me').then(function(data){
+        return data;
       });
     }
 
@@ -142,6 +162,10 @@ angular.module('adf.widget.redmine')
       getIssuesForChart: getIssuesForChart,
       getProjects: getProjects,
       getVersions: getVersions,
-      getTrackers: getTrackers
+      getCustomQueries: getCustomQueries,
+      getIssuesByQueryId: getIssuesByQueryId,
+      getRedmineEndpoint: getRedmineEndpoint,
+      getTrackers: getTrackers,
+      getMyIssues : getMyIssues
     };
   });
