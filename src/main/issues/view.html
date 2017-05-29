@@ -1,23 +1,68 @@
-<div class="alert alert-info" ng-if="!vm.config.columns">
-  Please configure the widget
-</div>
-<div ng-if="vm.config.columns">
-  <table st-table="rowCollection" class="table table-striped">
+<style type="text/css">
+  td>a{
+    font-weight: bold;
+    padding: 2px;
+    color: white;
+    border-radius: 2px 6px 6px 2px;
+    background-color: #409ae3;
+  }
+  td>a:hover{
+    color: white;
+    background-color: #4183c4;
+  }
+  th{
+    cursor: pointer;
+  }
+  .x-scrollable {
+    width: 100%;
+    max-height: 800px;
+    overflow-x: scroll;
+  }
+
+
+</style>
+<div class="x-scrollable">
+  <table class="table table-fixed">
     <thead>
-      <tr>
-        <th ng-if="vm.config.columns.id.show">ID</th>
-        <th ng-if="vm.config.columns.tracker.show">Tracker</th>
-        <th ng-if="vm.config.columns.status.show">Status</th>
-        <th ng-if="vm.config.columns.subject.show">Subject</th>
-      </tr>
+    <tr>
+      <th ng-if="vm.config.columns.id.show" ng-click="vm.changeOrder('id')">
+        ID ↓
+      </th>
+      <th ng-if="vm.config.columns.tracker.show" ng-click="vm.changeOrder('tracker.name')">
+        Tracker
+      </th>
+      <th ng-if="vm.config.columns.status.show" ng-click="vm.changeOrder('status.name')">
+        Status
+      </th>
+      <th ng-if="vm.config.columns.priority.show" ng-click="vm.changeOrder('priority.name')" >
+        Priority
+      </th>
+      <th ng-if="vm.config.columns.subject.show" ng-click="vm.changeOrder('subject')">
+        Subject
+      </th>
+      <th ng-if="vm.config.columns.assignee.show" ng-click="vm.changeOrder('author.name')">
+        Assignee
+      </th>
+    </tr>
     </thead>
-    <tbody>
-      <tr ng-repeat="issue in vm.issues">
-        <td ng-if="vm.config.columns.id.show"><a href="http://www.redmine.org/issues/{{issue.id}}">{{issue.id}}</a></td>
-        <td ng-if="vm.config.columns.tracker.show">{{issue.tracker.name}}</td>
-        <td ng-if="vm.config.columns.status.show">{{issue.status.name}}</td>
-        <td ng-if="vm.config.columns.subject.show">{{issue.subject}}</td>
-      </tr>
-    </tbody>
+    <tr ng-repeat="issue in vm.issues | orderBy: vm.order : vm.reverse ">
+      <td ng-if="vm.config.columns.id.show" title="'ID'">
+        <a href="{{vm.issueUrl}}{{issue.id}}">#{{issue.id}}</a></td>
+      <td ng-if="vm.config.columns.tracker.show" title="'Tracker'">
+        {{issue.tracker.name}}
+      </td>
+      <td ng-if="vm.config.columns.status.show" title="'Status'">
+        {{issue.status.name}}
+      </td>
+      <td ng-if="vm.config.columns.priority.show" title="'Priority'" >
+        {{issue.priority.name}}
+      </td>
+      <td ng-if="vm.config.columns.subject.show" title="'Subject'">
+        {{issue.subject}}
+      </td>
+      <td ng-if="vm.config.columns.assignee.show" title="'Assignee'">
+        {{issue.author.name}}
+      </td>
+    </tr>
   </table>
 </div>
