@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .controller('IssueController', function (issues, config, NgTableParams, $filter, redmineService) {
+  .controller('IssueController', function (issues, config, redmineService) {
     var vm = this;
     vm.config = config;
     vm.issues = issues;
