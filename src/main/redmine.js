@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker','ngTable'])
+angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
   .config(function (dashboardProvider) {
 
@@ -29,9 +29,9 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
     };
 
     dashboardProvider
-      .widget('redmine-issues', {
-        title: 'Redmine Issues',
-        description: 'Shows Issues of a given Redmine Instance',
+      .widget('redmine-custom-queries', {
+        title: 'Redmine Custom Queries',
+        description: 'Displays Issues from a Custom Query',
         templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
@@ -45,6 +45,21 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
           }
         },
         edit: editIssues
+      });
+
+    dashboardProvider
+      .widget('redmine-my-issues', {
+        title: 'My Redmine Issues',
+        description: 'Displays all issues assigned to me',
+        templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
+        controller: 'IssueController',
+        controllerAs: 'vm',
+        resolve: {
+          /** @ngInject **/
+          issues: function (redmineService) {
+              return redmineService.getMyIssues();
+          }
+        }
       });
 
     dashboardProvider

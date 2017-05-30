@@ -16,12 +16,18 @@
   .x-scrollable {
     width: 100%;
     max-height: 800px;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
 
 </style>
-<div class="x-scrollable">
+<div class="alert alert-info" ng-if="!vm.issues">
+  Please configure the widget
+</div>
+<div class="alert alert-info" ng-if="vm.issues.total_count == 0">
+  No issues found
+</div>
+<div ng-if="vm.issues" class="x-scrollable">
   <table class="table table-fixed">
     <thead>
     <tr>
