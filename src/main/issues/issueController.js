@@ -3,8 +3,15 @@
 angular.module('adf.widget.redmine')
   .controller('IssueController', function (issues, config, redmineService) {
     var vm = this;
-    vm.config = config;
-    vm.issues = issues;
+
+    if (config){
+      vm.config = config;
+    }
+
+    if(issues){
+      vm.issues = issues;
+    }
+
     vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
 
     vm.order = 'id';
@@ -13,6 +20,5 @@ angular.module('adf.widget.redmine')
       vm.order = order;
       vm.reverse = !vm.reverse;
     };
-
 
   });
