@@ -12,7 +12,6 @@ angular.module('adf.widget.redmine')
       vm.issues = issues;
     }
 
-
     vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
 
     vm.order = 'id';
@@ -21,6 +20,5 @@ angular.module('adf.widget.redmine')
       vm.order = order;
       vm.reverse = !vm.reverse;
     };
-
 
   });

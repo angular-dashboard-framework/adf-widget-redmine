@@ -3,6 +3,7 @@
 angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
   .config(function (dashboardProvider) {
+    var category = 'Redmine';
 
     var editIssues = {
       templateUrl: '{widgetsPath}/redmine/src/main/issues/edit/edit.html',
@@ -32,6 +33,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
       .widget('redmine-custom-queries', {
         title: 'Redmine Custom Queries',
         description: 'Displays Issues from a Custom Query',
+        category: category,
         templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
@@ -51,6 +53,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
       .widget('redmine-my-issues', {
         title: 'My Redmine Issues',
         description: 'Displays all issues assigned to me',
+        category: category,
         templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
@@ -66,6 +69,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
       .widget('redmine-chart', {
         title: 'Redmine Chart',
         description: 'Displays a burnup or burndown chart',
+        category: category,
         templateUrl: '{widgetsPath}/redmine/src/main/chart/view.html',
         controller: 'ChartController',
         controllerAs: 'vm',
