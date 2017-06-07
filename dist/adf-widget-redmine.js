@@ -1,9 +1,10 @@
 (function(window, undefined) {'use strict';
 
 
-angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js', 'ui.bootstrap.datepicker'])
+angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
   .config(["dashboardProvider", function (dashboardProvider) {
+    var category = 'Redmine';
 
     var editIssues = {
       templateUrl: '{widgetsPath}/redmine/src/main/issues/edit/edit.html',
@@ -30,25 +31,46 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
     };
 
     dashboardProvider
-      .widget('redmine-issues', {
-        title: 'Redmine Issues',
-        description: 'Shows Issues of a given Redmine Instance',
+      .widget('redmine-custom-queries', {
+        title: 'Redmine Custom Queries',
+        description: 'Displays Issues from a Custom Query',
+        category: category,
         templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
         resolve: {
           /** @ngInject **/
           issues: ["redmineService", "config", function (redmineService, config) {
-            return redmineService.getIssues(config);
+            if(config.customQuery && config.project){
+              return redmineService.getIssuesByQueryId(config.customQuery, config.project);
+            }
+
           }]
         },
         edit: editIssues
       });
 
     dashboardProvider
+      .widget('redmine-my-issues', {
+        title: 'My Redmine Issues',
+        description: 'Displays all issues assigned to me',
+        category: category,
+        templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
+        controller: 'IssueController',
+        controllerAs: 'vm',
+        resolve: {
+          /** @ngInject **/
+          issues: ["redmineService", function (redmineService) {
+              return redmineService.getMyIssues();
+          }]
+        }
+      });
+
+    dashboardProvider
       .widget('redmine-chart', {
         title: 'Redmine Chart',
         description: 'Displays a burnup or burndown chart',
+        category: category,
         templateUrl: '{widgetsPath}/redmine/src/main/chart/view.html',
         controller: 'ChartController',
         controllerAs: 'vm',
@@ -65,21 +87,31 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
   }]);
 
 angular.module("adf.widget.redmine").run(["$templateCache", function($templateCache) {$templateCache.put("{widgetsPath}/redmine/src/chart/view.html","<div class=\"alert alert-info\" ng-if=!vm.chart>Please configure the widget</div><div ng-if=vm.chart><canvas id=line class=\"chart chart-line\" chart-data=vm.chart.data chart-series=vm.chart.series chart-options=vm.chart.options></canvas></div>");
-$templateCache.put("{widgetsPath}/redmine/src/issues/view.html","<div class=\"alert alert-info\" ng-if=!vm.config.columns>Please configure the widget</div><div ng-if=vm.config.columns><table st-table=rowCollection class=\"table table-striped\"><thead><tr><th ng-if=vm.config.columns.id.show>ID</th><th ng-if=vm.config.columns.tracker.show>Tracker</th><th ng-if=vm.config.columns.status.show>Status</th><th ng-if=vm.config.columns.subject.show>Subject</th></tr></thead><tbody><tr ng-repeat=\"issue in vm.issues\"><td ng-if=vm.config.columns.id.show><a href=http://www.redmine.org/issues/{{issue.id}}>{{issue.id}}</a></td><td ng-if=vm.config.columns.tracker.show>{{issue.tracker.name}}</td><td ng-if=vm.config.columns.status.show>{{issue.status.name}}</td><td ng-if=vm.config.columns.subject.show>{{issue.subject}}</td></tr></tbody></table></div>");
-$templateCache.put("{widgetsPath}/redmine/src/chart/edit/edit.html","<form role=form><div class=form-group><label for=project>Filter</label></div><div class=form-group><label for=project>Project</label><select name=project id=project class=form-control ng-model=vm.config.project ng-change=vm.checkUpdates() ng-required=true><option value=All>All</option><option ng-repeat=\"project in vm.projects | orderBy: \'name\'\" value={{project}}>{{project.name}}</option></select></div><p class=input-group>Add Filter<select name=filter id=filter class=form-control ng-model=vm.filterToAdd ng-change=vm.addFilter(vm.filterToAdd)><option ng-repeat=\"filter in vm.filters | orderBy: \'name\'\" value={{filter.id}}>{{filter.name}}</option></select></p><div class=input-group ng-if=vm.config.filterWithVersion ng-init=vm.updateVersions() \"><label for=version>Fixed Version</label><select name=version id=version class=form-control ng-model=vm.config.version ng-change=vm.updateVersionEnd()><option ng-repeat=\"version in vm.versions | orderBy: \'name\'\" value={{version}}>{{version.name}}</option></select><span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithVersion=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></div><div class=input-group ng-if=vm.config.filterWithAssigned><label for=assgined_to_id>Assigned To</label> <span class=\"glyphicon glyphicon-info-sign\" uib-tooltip=\"Get issues which are assigned to the given user ID. <me> can be used instead an ID to fetch all issues from the logged in user. Leave empty if you want to see all issues.\"></span> <input name=assigned_to_id id=assgined_to_id class=form-control ng-model=config.assigned_to_id> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithAssigned=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></div><div class=input-group ng-if=vm.config.filterWithTracker ng-init=vm.updateTracker() \"><label for=tacker>Tracker</label><select name=tracker id=tracker class=form-control ng-model=vm.config.tracker><option ng-repeat=\"tracker in vm.trackers | orderBy: \'name\'\" value={{tracker}}>{{tracker.name}}</option></select><span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithTracker=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></div><div class=form-group><input type=checkbox name=showIdeal ng-model=config.showIdeal> Show ideal line</div><div><p class=input-group><input class=form-control datepicker-options=vm.dateOptions is-open=vm.popup1.opened ng-model=vm.config.timespan.fromDateTime placeholder=from show-button-bar=false type=text uib-datepicker-popup={{format}} ng-required=true> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=vm.open1() type=button><i class=\"glyphicon glyphicon-calendar\"></i></button></span></p><p class=input-group><input class=form-control datepicker-options=vm.dateOptions is-open=vm.popup2.opened ng-model=vm.config.timespan.toDateTime placeholder=to show-button-bar=false type=text uib-datepicker-popup={{format}} ng-required=true> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=vm.open2() type=button><i class=\"glyphicon glyphicon-calendar\"></i></button></span></p></div></form>");
-$templateCache.put("{widgetsPath}/redmine/src/issues/edit/edit.html","<form role=form><div class=form-group><label for=project>Project</label><select name=project id=project class=form-control ng-model=config.project><option value=All>All</option><option ng-repeat=\"project in vm.projects | orderBy: \'name\'\" value={{project.id}}>{{project.name}}</option></select></div><div class=form-group><label for=assgined_to_id>Assigned To</label> <span class=\"glyphicon glyphicon-info-sign\" uib-tooltip=\"Get issues which are assigned to the given user ID. <me> can be used instead an ID to fetch all issues from the logged in user. Leave empty if you want to see all issues.\"></span> <input name=assigned_to_id id=assgined_to_id class=form-control ng-model=config.assigned_to_id></div><div class=form-group><input type=checkbox name=showClosed ng-model=config.showClosed> Show closed issues</div><div class=form-group><label for=project>Columns to show:</label><li class=list-group-item ng-repeat=\"(key, entry) in vm.possibleColumns\"><input type=checkbox name={{key}} ng-model=config.columns[key].show> {{entry.name}}</li></div></form>");}]);
+$templateCache.put("{widgetsPath}/redmine/src/issues/view.html","<style type=text/css>\n  td>a{\n    font-weight: bold;\n    padding: 2px;\n    color: white;\n    border-radius: 2px 6px 6px 2px;\n    background-color: #409ae3;\n  }\n  td>a:hover{\n    color: white;\n    background-color: #4183c4;\n  }\n  th{\n    cursor: pointer;\n  }\n  .x-scrollable {\n    width: 100%;\n    max-height: 800px;\n    overflow-x: auto;\n  }\n\n\n</style><div class=\"alert alert-info\" ng-if=!vm.issues>Please configure the widget</div><div class=\"alert alert-info\" ng-if=\"vm.issues.total_count == 0\">No issues found</div><div ng-if=vm.issues class=x-scrollable><table class=\"table table-fixed\"><thead><tr><th ng-if=vm.config.columns.id.show ng-click=\"vm.changeOrder(\'id\')\">ID ↓</th><th ng-if=vm.config.columns.tracker.show ng-click=\"vm.changeOrder(\'tracker.name\')\">Tracker</th><th ng-if=vm.config.columns.status.show ng-click=\"vm.changeOrder(\'status.name\')\">Status</th><th ng-if=vm.config.columns.priority.show ng-click=\"vm.changeOrder(\'priority.name\')\">Priority</th><th ng-if=vm.config.columns.subject.show ng-click=\"vm.changeOrder(\'subject\')\">Subject</th><th ng-if=vm.config.columns.assignee.show ng-click=\"vm.changeOrder(\'author.name\')\">Assignee</th></tr></thead><tr ng-repeat=\"issue in vm.issues | orderBy: vm.order : vm.reverse\"><td ng-if=vm.config.columns.id.show title=\"\'ID\'\"><a href={{vm.issueUrl}}{{issue.id}}>#{{issue.id}}</a></td><td ng-if=vm.config.columns.tracker.show title=\"\'Tracker\'\">{{issue.tracker.name}}</td><td ng-if=vm.config.columns.status.show title=\"\'Status\'\">{{issue.status.name}}</td><td ng-if=vm.config.columns.priority.show title=\"\'Priority\'\">{{issue.priority.name}}</td><td ng-if=vm.config.columns.subject.show title=\"\'Subject\'\">{{issue.subject}}</td><td ng-if=vm.config.columns.assignee.show title=\"\'Assignee\'\">{{issue.author.name}}</td></tr></table></div>");
+$templateCache.put("{widgetsPath}/redmine/src/chart/edit/edit.html","<form role=form><div class=form-group><label for=project>Project</label><select name=project id=project class=form-control ng-model=vm.config.project ng-change=vm.checkUpdates() ng-required=true><option value=All>All</option><option ng-repeat=\"project in vm.projects | orderBy: \'name\'\" value={{project}}>{{project.name}}</option></select></div><p class=input-group>Add Filter<select name=filter id=filter class=form-control ng-model=vm.filterToAdd ng-change=vm.addFilter(vm.filterToAdd)><option ng-repeat=\"filter in vm.filters | orderBy: \'name\'\" value={{filter.id}}>{{filter.name}}</option></select></p><div ng-if=vm.config.filterWithVersion><label for=version>Fixed Version</label><p class=input-group ng-init=vm.updateVersions()><select name=version id=version class=form-control ng-model=vm.config.version ng-change=vm.updateVersionEnd()><option ng-repeat=\"version in vm.versions | orderBy: \'name\'\" value={{version}}>{{version.name}}</option></select><span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithVersion=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></p></div><div ng-if=vm.config.filterWithAssigned><label for=assgined_to_id>Assigned To</label> <span class=\"glyphicon glyphicon-info-sign\" uib-tooltip=\"Get issues which are assigned to the given user ID. <me> can be used instead an ID to fetch all issues from the logged in user. Leave empty if you want to see all issues.\"></span><div class=input-group><input name=assigned_to_id id=assgined_to_id class=form-control ng-model=config.assigned_to_id> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithAssigned=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></div></div><div ng-if=vm.config.filterWithTracker><label for=tacker>Tracker</label><div class=input-group ng-init=vm.updateTracker()><select name=tracker id=tracker class=form-control ng-model=vm.config.tracker><option ng-repeat=\"tracker in vm.trackers | orderBy: \'name\'\" value={{tracker}}>{{tracker.name}}</option></select><span class=input-group-btn><button class=\"btn btn-default\" ng-click=\"vm.config.filterWithTracker=false\" type=button><i class=\"glyphicon glyphicon-remove\"></i></button></span></div></div><div class=form-group><input type=checkbox name=showIdeal ng-model=config.showIdeal> Show ideal line</div><div><p class=input-group><input class=form-control datepicker-options=vm.dateOptions is-open=vm.popup1.opened ng-model=vm.config.timespan.fromDateTime placeholder=from show-button-bar=false type=text uib-datepicker-popup={{format}} ng-required=true> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=vm.open1() type=button><i class=\"glyphicon glyphicon-calendar\"></i></button></span></p><p class=input-group><input class=form-control datepicker-options=vm.dateOptions is-open=vm.popup2.opened ng-model=vm.config.timespan.toDateTime placeholder=to show-button-bar=false type=text uib-datepicker-popup={{format}} ng-required=true> <span class=input-group-btn><button class=\"btn btn-default\" ng-click=vm.open2() type=button><i class=\"glyphicon glyphicon-calendar\"></i></button></span></p></div></form>");
+$templateCache.put("{widgetsPath}/redmine/src/issues/edit/edit.html","<form role=form><div class=form-group><label for=project>Project</label><select name=project id=project required class=form-control ng-model=config.project><option disabled select>Select a project</option><option ng-repeat=\"project in vm.projects | orderBy: \'name\'\" value={{project.id}}>{{project.name}}</option></select></div><div class=form-group><label for=customQuery>My Custom-Queries</label><select name=customQuery id=customQuery required class=form-control ng-model=config.customQuery><option disabled selected>Select your query</option><option ng-repeat=\"customQuery in vm.customQueries| orderBy: \'name\'\" value={{customQuery.id}}>{{customQuery.name}}</option></select></div><div class=form-group><input type=checkbox name=showClosed ng-model=config.showClosed> Show closed issues</div><div class=form-group><label for=project>Columns to show:</label><li class=list-group-item ng-repeat=\"(key, entry) in vm.possibleColumns\"><input type=checkbox name={{key}} ng-model=config.columns[key].show> {{entry.name}}</li></div></form>");}]);
 
 
 angular.module('adf.widget.redmine')
-  .controller('editIssuesController', ["projects", "config", function(projects, config){
+  .controller('editIssuesController', ["projects", "config", "redmineService", function(projects, config, redmineService){
     var vm = this;
 
     vm.possibleColumns = {
       'id':{'name':'ID', 'show': true},
       'tracker':{'name':'Tracker','show': true},
       'status':{'name':'Status','show': true},
-      'subject':{'name':'Subject','show': true}
+      'subject':{'name':'Subject','show': true},
+      'assignee':{'name':'Assignee','show': true},
+      'priority':{'name':'Priority','show': true}
     };
+
+    redmineService.getCustomQueries().then(function(data){
+      if (data && data.queries){
+        vm.customQueries = data.queries;
+      }else{
+        vm.customQueries = null;
+      }
+    });
 
     if(angular.equals({},config)) {
       config.columns=vm.possibleColumns;
@@ -177,7 +209,7 @@ angular.module('adf.widget.redmine')
     function toggleMin() {
       vm.inlineOptions.minDate = vm.inlineOptions.minDate ? null : new Date();
       vm.dateOptions.minDate = vm.inlineOptions.minDate;
-    };
+    }
 
     function updateVersions() {
       if (vm.config.project) {
@@ -189,19 +221,19 @@ angular.module('adf.widget.redmine')
           vm.versions = versions;
         });
       }
-    };
+    }
 
     function checkUpdates() {
       if (vm.config.filterWithVersion) {
         vm.updateVersions();
       }
-    };
+    }
 
     function updateVersionEnd() {
       vm.config.timespan.toDateTime = new Date(angular.fromJson(vm.config.version).due_date);
       var date = new Date(vm.config.timespan.toDateTime);
       vm.config.timespan.fromDateTime = date.setDate(date.getDate() - 14);
-    };
+    }
 
     function updateTracker() {
       redmineService.getTrackers().then(function (trackers) {
@@ -232,13 +264,26 @@ angular.module('adf.widget.redmine')
 
 
 angular.module('adf.widget.redmine')
-  .controller('IssueController', ["issues", "config", function(issues, config){
+  .controller('IssueController', ["issues", "config", "redmineService", function (issues, config, redmineService) {
     var vm = this;
-    vm.config = config;
-    if(!vm.config.limit) {
-      vm.config.limit = 25;
+
+    if (config){
+      vm.config = config;
     }
-    vm.issues = issues;
+
+    if(issues){
+      vm.issues = issues;
+    }
+
+    vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
+
+    vm.order = 'id';
+
+    vm.changeOrder = function(order){
+      vm.order = order;
+      vm.reverse = !vm.reverse;
+    };
+
   }]);
 
 
@@ -247,43 +292,41 @@ angular.module('adf.widget.redmine')
   .factory('chartDataService', ["$q", "redmineService", function ($q, redmineService) {
 
     function getChartData(config) {
+    config.numberPoints = 50;
       return redmineService.getIssuesForChart(config).then(function (issues) {
         //if (vm.config.timespan && vm.config.timespan.fromDateTime && vm.config.timespan.toDateTime)
         var from = new Date(config.timespan.fromDateTime);
         var to = new Date(config.timespan.toDateTime);
         return calculateOpenIssuesPerDay(from, to, issues, config);
-      });
+      })
     }
 
     function calculateOpenIssuesPerDay(from, to, issues, config) {
       var timeDiff = Math.abs(from.getTime() - to.getTime());
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      var pointThinningRate = diffDays / config.numberPoints;
       var numberAllIssues = issues.length;
       var idealIssuesPerDay = numberAllIssues / diffDays;
       var idealData = [];
-      // order issues by creation date
-      var openIssues = []; // inv: ordered by "closed_on"
-      var dates = [];// x-values
-      var values = [];// y-values
+      var openIssues = [];
+      var values = [];
       while (from.getTime() <= to.getTime()) {
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
         var value = {x: from.toISOString(),y:openIssues.length};
         values.push(value);
         if (config.showIdeal) {
-          var idealValue = numberAllIssues - idealData.length * idealIssuesPerDay;
+          var idealValue = Math.round((numberAllIssues - idealData.length * idealIssuesPerDay * pointThinningRate)*100) / 100;
           var ideal = {x: from.toISOString(),y:idealValue};
           idealData.push(ideal);
         }
-        from.setDate(from.getDate() + 1); // next day
+        from.setDate(from.getDate() + pointThinningRate);
       }
       var valueSets = [values];
       if (config.showIdeal) {
         valueSets.push(idealData);
       }
-      return {
-        values: valueSets
-      }
+      return valueSets;
     }
 
     function moveNewOpenIssues(allIssues, openIssues, date) {
@@ -294,6 +337,7 @@ angular.module('adf.widget.redmine')
           allIssues.splice(i, 1);
           i--;
         } else {
+          // we can stop here, cause the issues are ordered by creation date
           break;
         }
       }
@@ -306,8 +350,6 @@ angular.module('adf.widget.redmine')
           if (closeDate.getTime() <= date.getTime()) {
             openIssues.splice(i, 1);
             i--;
-          } else {
-            //break;
           }
         }
       }
@@ -325,8 +367,6 @@ angular.module('adf.widget.redmine')
 
     var vm = this;
     vm.config = config;
-
-    var generatedData = chartData;
 
     var options = {
       scales: {
@@ -363,8 +403,7 @@ angular.module('adf.widget.redmine')
     };
 
     vm.chart = {
-      labels: generatedData.dates,
-      data: generatedData.values,
+      data: chartData,
       series: [],
       class: "chart-line",
       options: options
@@ -514,9 +553,29 @@ angular.module('adf.widget.redmine')
       return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
     }
 
+    function getCustomQueries() {
+      return request('queries.json');
+    }
+
+    function getIssuesByQueryId(queryId, projectId) {
+      return request('issues.json?query_id=' + queryId + '&project_id=' + projectId).then(function(data){
+        return data.issues;
+      });
+    }
+
+    function getRedmineEndpoint(){
+      return redmineEndpoint;
+    }
+
     function getTrackers() {
       return request('trackers.json').then(function (data) {
         return data.trackers;
+      });
+    }
+
+    function getMyIssues(){
+      return request('issues.json?assigned_to_id=me').then(function(data){
+        return data;
       });
     }
 
@@ -525,7 +584,11 @@ angular.module('adf.widget.redmine')
       getIssuesForChart: getIssuesForChart,
       getProjects: getProjects,
       getVersions: getVersions,
-      getTrackers: getTrackers
+      getCustomQueries: getCustomQueries,
+      getIssuesByQueryId: getIssuesByQueryId,
+      getRedmineEndpoint: getRedmineEndpoint,
+      getTrackers: getTrackers,
+      getMyIssues : getMyIssues
     };
   }]);
 })(window);
