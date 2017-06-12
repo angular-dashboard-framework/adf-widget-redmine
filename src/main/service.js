@@ -23,7 +23,6 @@ angular.module('adf.widget.redmine')
       });
     }
 
-
     function getIssues(config) {
       var params = generateGeneralIssuesParameters(config);
       var limit = config.limit ? config.limit : Number.MAX_SAFE_INTEGER;
@@ -118,8 +117,8 @@ angular.module('adf.widget.redmine')
       if (data.filterWithVersion && data.version) {
         params += '&fixed_version_id=' + angular.fromJson(data.version).id;
       }
-      if (data.filterWithTtracker && data.tracker) {
-        params += '&tracker_id=' + angular.fromJson(data.tracker).id;
+      if (data.filterWithTracker && data.tracker) {
+        params += '&tracker_id='+angular.fromJson(data.tracker).id;
       }
       return params;
     }
@@ -131,9 +130,29 @@ angular.module('adf.widget.redmine')
       return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
     }
 
+    function getCustomQueries() {
+      return request('queries.json');
+    }
+
+    function getIssuesByQueryId(queryId, projectId) {
+      return request('issues.json?query_id=' + queryId + '&project_id=' + projectId).then(function(data){
+        return data.issues;
+      });
+    }
+
+    function getRedmineEndpoint(){
+      return redmineEndpoint;
+    }
+
     function getTrackers() {
       return request('trackers.json').then(function (data) {
         return data.trackers;
+      });
+    }
+
+    function getMyIssues(){
+      return request('issues.json?assigned_to_id=me').then(function(data){
+        return data;
       });
     }
 
@@ -142,6 +161,10 @@ angular.module('adf.widget.redmine')
       getIssuesForChart: getIssuesForChart,
       getProjects: getProjects,
       getVersions: getVersions,
-      getTrackers: getTrackers
+      getCustomQueries: getCustomQueries,
+      getIssuesByQueryId: getIssuesByQueryId,
+      getRedmineEndpoint: getRedmineEndpoint,
+      getTrackers: getTrackers,
+      getMyIssues : getMyIssues
     };
   });

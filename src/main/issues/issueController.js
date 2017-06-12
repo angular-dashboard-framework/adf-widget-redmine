@@ -1,11 +1,24 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .controller('IssueController', function(issues, config){
+  .controller('IssueController', function (issues, config, redmineService) {
     var vm = this;
-    vm.config = config;
-    if(!vm.config.limit) {
-      vm.config.limit = 25;
+
+    if (config){
+      vm.config = config;
     }
-    vm.issues = issues;
+
+    if(issues){
+      vm.issues = issues;
+    }
+
+    vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
+
+    vm.order = 'id';
+
+    vm.changeOrder = function(order){
+      vm.order = order;
+      vm.reverse = !vm.reverse;
+    };
+
   });
