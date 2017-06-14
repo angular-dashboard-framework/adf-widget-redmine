@@ -14,7 +14,7 @@ var annotateOptions = {
 };
 
 var templateOptions = {
-  root: '{widgetsPath}/redmine/src/main',
+  root: '{widgetsPath}/redmine/src',
   module: 'adf.widget.redmine'
 };
 
