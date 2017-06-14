@@ -10,7 +10,7 @@ angular.module('adf.widget.redmine')
         var from = new Date(config.timespan.fromDateTime);
         var to = new Date(config.timespan.toDateTime);
         return calculateOpenIssuesPerDay(from, to, issues, config);
-      })
+      });
     }
 
     function calculateOpenIssuesPerDay(from, to, issues, config) {

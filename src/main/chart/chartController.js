@@ -37,7 +37,8 @@ angular.module('adf.widget.redmine')
       legend: {
         display: true,
         position: "bottom"
-      }
+      },
+      responsive: true
     };
 
     vm.chart = {

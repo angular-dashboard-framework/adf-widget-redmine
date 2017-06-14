@@ -8,8 +8,25 @@ angular.module('adf.widget.redmine')
       vm.config = config;
     }
 
-    if(issues){
+    if (!config.columns){
+      vm.config = {
+        columns: {
+          'id':{'name':'ID', 'show': true},
+          'tracker':{'name':'Tracker','show': true},
+          'status':{'name':'Status','show': true},
+          'subject':{'name':'Subject','show': true},
+          'assignee':{'name':'Assignee','show': false},
+          'priority':{'name':'Priority','show': true}
+        },
+        assigned_to_id: 'me'
+      };
+    }
+
+    if (issues){
       vm.issues = issues;
+      if (issues.issues){
+        vm.issues = vm.issues.issues;
+      }
     }
 
     vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
