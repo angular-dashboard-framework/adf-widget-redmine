@@ -5,8 +5,6 @@ angular.module('adf.widget.redmine')
 
     var vm = this;
     vm.config = config;
-    console.log(vm.config);
-
     var options = {
       scales: {
         yAxes: [
