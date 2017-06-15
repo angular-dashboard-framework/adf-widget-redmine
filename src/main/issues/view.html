@@ -21,13 +21,13 @@
 
 
 </style>
-<div class="alert alert-info" ng-if="!vm.issues[0].issueUrl">
+<div class="alert alert-info" ng-if="!vm.issues">
   Please configure the widget
 </div>
-<div class="alert alert-info" ng-if="!vm.issues">
+<div class="alert alert-info" ng-if="vm.issues && !vm.issues[0].id">
   No issues found
 </div>
-<div ng-if="vm.issues && vm.issues[0].issueUrl" class="x-scrollable">
+<div ng-if="vm.issues && vm.issues[0].id" class="x-scrollable">
   <table class="table table-fixed">
     <thead>
     <tr>
