@@ -1,16 +1,9 @@
 <form role="form">
-  <div class="form-group">
-    <label for="project">Project</label>
-    <select name="project" id="project" required="true" class="form-control" ng-model="config.project">
-      <option value="" disabled>Select a project</option>
-      <option ng-repeat="project in vm.projects | orderBy: 'name'" value="{{project.id}}">{{project.name}}</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="customQuery">My Custom-Queries</label>
-    <select name="customQuery" id="customQuery" required="true" class="form-control" ng-model="config.customQuery">
+   <div class="form-group">
+    <label >My Custom-Queries</label>
+    <select name="customQuery" ng-options="customQuery as customQuery.name for customQuery
+    in vm.customQueries track by customQuery.name" required="true" class="form-control" ng-model="config.customQuery">
       <option value="" disabled>Select your query</option>
-      <option ng-repeat="customQuery in vm.customQueries| orderBy: 'name'" value="{{customQuery.id}}">{{customQuery.name}}</option>
     </select>
   </div>
   <div class="form-group">
@@ -20,7 +13,7 @@
     Show closed issues
   </div>
   <div class="form-group">
-    <label for="project">Columns to show:</label>
+    <label >Columns to show:</label>
     <li class="list-group-item" ng-repeat="(key, entry) in vm.possibleColumns">
       <input type="checkbox"
              name={{key}}

@@ -40,8 +40,8 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         resolve: {
           /** @ngInject **/
           issues: function (redmineService, config) {
-            if(config.customQuery && config.project){
-              return redmineService.getIssuesByQueryId(config.customQuery, config.project);
+            if(config.customQuery){
+              return redmineService.getIssuesByQueryId(config.customQuery.id, config.customQuery.project_id);
             }
 
           }

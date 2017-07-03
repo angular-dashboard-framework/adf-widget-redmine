@@ -21,6 +21,7 @@ angular.module('adf.widget.redmine')
       }
     });
 
+
     if(angular.equals({},config)) {
       config.columns=vm.possibleColumns;
       config.project='';
