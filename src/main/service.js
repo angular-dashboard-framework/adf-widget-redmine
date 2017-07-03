@@ -131,7 +131,7 @@ angular.module('adf.widget.redmine')
     }
 
     function getCustomQueries() {
-      return request('queries.json');
+      return request('queries.json?limit=100');
     }
 
     function getIssuesByQueryId(queryId, projectId) {
