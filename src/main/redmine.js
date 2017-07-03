@@ -64,8 +64,8 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
           }
         }
       });
-
-    dashboardProvider
+    // widget is currently broken
+    /* dashboardProvider
       .widget('redmine-chart', {
         title: 'Redmine Chart',
         description: 'Displays a burnup or burndown chart',
@@ -74,7 +74,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         controller: 'ChartController',
         controllerAs: 'vm',
         resolve: {
-          /** @ngInject **/
+          /** @ngInject **/ /*
           chartData: function (chartDataService, config) {
             if(config.project) {
                 return chartDataService.getChartData(config);
@@ -83,4 +83,5 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         },
         edit: editChart
       });
+      */
   });
