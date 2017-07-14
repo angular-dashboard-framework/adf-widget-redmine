@@ -31,7 +31,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'smart-table', 'chart.js',
     dashboardProvider
       .widget('redmine-issues', {
         title: 'Redmine Issues',
-        description: 'Shows Issues of a given Redmine Instance',
+        description: 'Shows issues of a given Redmine instance',
         templateUrl: '{widgetsPath}/redmine/src/main/issues/view.html',
         controller: 'IssueController',
         controllerAs: 'vm',
