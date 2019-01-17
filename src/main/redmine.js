@@ -2,6 +2,7 @@
 
 angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
+  .constant('redmineRedirectEndpoint', null)
   .config(function (dashboardProvider) {
     var category = 'Redmine';
 
