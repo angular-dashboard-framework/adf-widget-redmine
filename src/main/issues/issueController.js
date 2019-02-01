@@ -29,7 +29,11 @@ angular.module('adf.widget.redmine')
       }
     }
 
-    vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
+    var redirectEndpoint = redmineService.getRedmineRedirectEndpoint();
+    if (!redirectEndpoint) {
+      redirectEndpoint = redmineService.getRedmineEndpoint();
+    }
+    vm.issueUrl = redirectEndpoint + 'issues/';
 
     vm.order = 'id';
 

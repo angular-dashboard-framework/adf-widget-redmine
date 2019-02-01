@@ -3,6 +3,7 @@
 
 angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
   .constant('redmineEndpoint', 'http://www.redmine.org/')
+  .constant('redmineRedirectEndpoint', null)
   .config(["dashboardProvider", function (dashboardProvider) {
     var category = 'Redmine';
 
@@ -294,7 +295,11 @@ angular.module('adf.widget.redmine')
       }
     }
 
-    vm.issueUrl = redmineService.getRedmineEndpoint() + 'issues/';
+    var redirectEndpoint = redmineService.getRedmineRedirectEndpoint();
+    if (!redirectEndpoint) {
+      redirectEndpoint = redmineService.getRedmineEndpoint();
+    }
+    vm.issueUrl = redirectEndpoint + 'issues/';
 
     vm.order = 'id';
 
@@ -443,7 +448,7 @@ angular.module('adf.widget.redmine')
 
 
 angular.module('adf.widget.redmine')
-  .factory('redmineService', ["$http", "redmineEndpoint", "$q", function ($http, redmineEndpoint, $q) {
+  .factory('redmineService', ["$http", "redmineEndpoint", "redmineRedirectEndpoint", "$q", function ($http, redmineEndpoint, redmineRedirectEndpoint, $q) {
 
     function extractData(response) {
       return response.data;
@@ -586,6 +591,10 @@ angular.module('adf.widget.redmine')
       return redmineEndpoint;
     }
 
+    function getRedmineRedirectEndpoint(){
+      return redmineRedirectEndpoint;
+    }
+
     function getTrackers() {
       return request('trackers.json').then(function (data) {
         return data.trackers;
@@ -606,6 +615,7 @@ angular.module('adf.widget.redmine')
       getCustomQueries: getCustomQueries,
       getIssuesByQueryId: getIssuesByQueryId,
       getRedmineEndpoint: getRedmineEndpoint,
+      getRedmineRedirectEndpoint: getRedmineRedirectEndpoint,
       getTrackers: getTrackers,
       getMyIssues : getMyIssues
     };
