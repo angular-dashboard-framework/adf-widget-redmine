@@ -46,7 +46,7 @@
       <th ng-if="vm.config.columns.subject.show" ng-click="vm.changeOrder('subject')">
         Subject
       </th>
-      <th ng-if="vm.config.columns.assignee.show" ng-click="vm.changeOrder('author.name')">
+      <th ng-if="vm.config.columns.assignee.show" ng-click="vm.changeOrder('assignee.name')">
         Assignee
       </th>
     </tr>
@@ -67,7 +67,7 @@
         {{issue.subject}}
       </td>
       <td ng-if="vm.config.columns.assignee.show" title="'Assignee'">
-        {{issue.author.name}}
+        {{issue.assignee.name}}
       </td>
     </tr>
   </table>

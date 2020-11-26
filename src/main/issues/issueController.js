@@ -29,6 +29,8 @@ angular.module('adf.widget.redmine')
       }
     }
 
+    console.log(vm.issues);
+
     var redirectEndpoint = redmineService.getRedmineRedirectEndpoint();
     if (!redirectEndpoint) {
       redirectEndpoint = redmineService.getRedmineEndpoint();
