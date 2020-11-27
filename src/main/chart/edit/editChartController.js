@@ -32,7 +32,6 @@ angular.module('adf.widget.redmine')
       vm.config.timespan = {};
     }
 
-
     vm.inlineOptions = {
       customClass: getDayClass,
       minDate: new Date(),
