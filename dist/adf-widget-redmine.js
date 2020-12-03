@@ -343,13 +343,13 @@ angular.module('adf.widget.redmine')
     function calculateOpenIssuesPerDay(from, to, issues, config) {
       var timeDiff = Math.abs(from.getTime() - to.getTime());
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      var pointThinningRate = diffDays / 10;
+      var pointThinningRate = timeDiff / config.numberPoints;
       var numberAllIssues = issues.length;
       var idealIssuesPerDay = numberAllIssues / diffDays;
       var idealData = [];
       var openIssues = [];
       var values = [];
-      while ((from.getTime() <= to.getTime()) && (values.length < 5000)) {
+      while ((from.getTime() <= to.getTime())) {
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
         var value = {x: from.toISOString(),y:openIssues.length};
@@ -359,7 +359,7 @@ angular.module('adf.widget.redmine')
           var ideal = {x: from.toISOString(),y:idealValue};
           idealData.push(ideal);
         }
-        from.setDate(from.getDate() + pointThinningRate);
+        from.setTime(from.getTime() + pointThinningRate);
       }
       var valueSets = [values];
       if (config.showIdeal) {
@@ -370,15 +370,12 @@ angular.module('adf.widget.redmine')
 
     function getChartData(config) {
       return redmineService.getIssuesForChart(config).then(function (issues) {
-        //if (vm.config.timespan && vm.config.timespan.fromDateTime && vm.config.timespan.toDateTime)
+        config.numberPoints = 50;
         var from = new Date(config.timespan.fromDateTime);
         var to = new Date(config.timespan.toDateTime);
         return calculateOpenIssuesPerDay(from, to, issues, config);
       });
     }
-
-
-
 
     return {
       getChartData: getChartData
