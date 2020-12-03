@@ -348,11 +348,11 @@ angular.module('adf.widget.redmine')
       while ((from.getTime() <= to.getTime())) {
         moveNewOpenIssues(issues, openIssues, from);
         removeNewClosedIssues(openIssues, from);
-        var value = {x: from.toLocaleString(),y:openIssues.length};
+        var value = {x: from.toISOString(),y:openIssues.length};
         values.push(value);
         if (config.showIdeal) {
           var idealValue = Math.round((numberAllIssues - idealData.length * idealIssuesPerInterval * pointThinningRate)*100)/100;
-          var ideal = {x: from.toLocaleString(),y:idealValue};
+          var ideal = {x: from.toISOString(),y:idealValue};
           idealData.push(ideal);
         }
         from.setTime(from.getTime() + pointThinningRate);
