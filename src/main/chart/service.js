@@ -10,9 +10,6 @@ angular.module('adf.widget.redmine')
           openIssues.push(allIssues[i]);
           allIssues.splice(i, 1);
           i--;
-        } else {
-          // we can stop here, cause the issues are ordered by creation date
-          break;
         }
       }
     }
