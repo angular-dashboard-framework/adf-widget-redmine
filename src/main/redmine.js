@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.datepicker'])
-  .constant('redmineEndpoint', 'http://www.redmine.org/')
+  .constant('redmineEndpoint', 'http://localhost:3000/')
   .config(function (dashboardProvider) {
     var category = 'Redmine';
 
@@ -65,7 +65,7 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         }
       });
     // widget is currently broken
-    /* dashboardProvider
+     dashboardProvider
       .widget('redmine-chart', {
         title: 'Redmine Chart',
         description: 'Displays a burnup or burndown chart',
@@ -74,7 +74,6 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         controller: 'ChartController',
         controllerAs: 'vm',
         resolve: {
-          /** @ngInject **/ /*
           chartData: function (chartDataService, config) {
             if(config.project) {
                 return chartDataService.getChartData(config);
@@ -83,5 +82,5 @@ angular.module('adf.widget.redmine', ['adf.provider', 'chart.js', 'ui.bootstrap.
         },
         edit: editChart
       });
-      */
+
   });

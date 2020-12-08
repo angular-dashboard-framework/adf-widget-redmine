@@ -9,7 +9,8 @@
   </div>
 
   <p class="input-group">
-    Add Filter
+    <label for="Filter">Add Filter</label>
+
     <select name="filter" id="filter" class="form-control" ng-model="vm.filterToAdd" ng-change="vm.addFilter(vm.filterToAdd)">
       <option ng-repeat="filter in vm.filters | orderBy: 'name'" value="{{filter.id}}">{{filter.name}}</option>
     </select>
@@ -62,6 +63,7 @@
   </div>
 
   <div>
+    <label for="period">Period</label>
     <p class="input-group">
       <input class="form-control" datepicker-options="vm.dateOptions" is-open="vm.popup1.opened" ng-model="vm.config.timespan.fromDateTime"
         placeholder="from" show-button-bar="false" type="text" uib-datepicker-popup="{{format}}" ng-required="true" />

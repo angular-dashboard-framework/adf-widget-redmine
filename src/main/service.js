@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('adf.widget.redmine')
-  .factory('redmineService', function ($http, redmineEndpoint, $q) {
+  .factory('redmineService', function ($http, redmineEndpoint, redmineRedirectEndpoint, $q) {
 
     function extractData(response) {
       return response.data;
@@ -144,6 +144,10 @@ angular.module('adf.widget.redmine')
       return redmineEndpoint;
     }
 
+    function getRedmineRedirectEndpoint(){
+      return redmineRedirectEndpoint;
+    }
+
     function getTrackers() {
       return request('trackers.json').then(function (data) {
         return data.trackers;
@@ -164,6 +168,7 @@ angular.module('adf.widget.redmine')
       getCustomQueries: getCustomQueries,
       getIssuesByQueryId: getIssuesByQueryId,
       getRedmineEndpoint: getRedmineEndpoint,
+      getRedmineRedirectEndpoint: getRedmineRedirectEndpoint,
       getTrackers: getTrackers,
       getMyIssues : getMyIssues
     };
