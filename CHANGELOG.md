@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.1.6] - 2020-12-08
+## [v0.1.8] - 2020-12-08
 
 ### Fixed
 - Fixes burndown chart; #8
