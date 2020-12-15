@@ -143,7 +143,7 @@ angular.module('adf.widget.easyredmine', ['adf.provider', 'chart.js', 'ui.bootst
     // Create widgets
     createMyIssuesWidget(dashboardProvider, 'easyredmine-my-issues', 'My Issues', category, true);
     createCustomQueriesWidget(dashboardProvider, 'easyredmine-custom-queries', 'Custom Queries', category, true);
-    createChartWidget(dashboardProvider, 'easyredmine-chart', 'Chart', category, true);
+    //createChartWidget(dashboardProvider, 'easyredmine-chart', 'Chart', category, true);
   }]);
 
 angular.module("adf.widget.easyredmine").run(["$templateCache", function($templateCache) {$templateCache.put("{widgetsPath}/redmine/src/main/chart/view.html","<div class=\"alert alert-info\" ng-if=!vm.config.project>Please configure the widget</div><div ng-if=\"vm.chart && vm.config.project\"><canvas id=line class=\"chart chart-line\" chart-data=vm.chart.data chart-series=vm.chart.series chart-options=vm.chart.options></canvas></div>");

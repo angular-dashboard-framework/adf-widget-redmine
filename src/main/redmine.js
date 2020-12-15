@@ -142,5 +142,5 @@ angular.module('adf.widget.easyredmine', ['adf.provider', 'chart.js', 'ui.bootst
     // Create widgets
     createMyIssuesWidget(dashboardProvider, 'easyredmine-my-issues', 'My Issues', category, true);
     createCustomQueriesWidget(dashboardProvider, 'easyredmine-custom-queries', 'Custom Queries', category, true);
-    createChartWidget(dashboardProvider, 'easyredmine-chart', 'Chart', category, true);
+    //createChartWidget(dashboardProvider, 'easyredmine-chart', 'Chart', category, true);
   });
