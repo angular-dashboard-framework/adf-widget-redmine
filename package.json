@@ -17,6 +17,7 @@
     "eslint-plugin-angular": "^2.4.0",
     "eslint-plugin-jasmine": "^2.2.0",
     "gulp": "^3.8.11",
+    "gulp-add-src": "^1.0.0",
     "gulp-angular-filesort": "^1.1.1",
     "gulp-angular-templatecache": "^1.6.0",
     "gulp-concat": "^2.5.2",

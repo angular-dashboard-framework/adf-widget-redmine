@@ -1,0 +1,32 @@
+<form role="form">
+  <div class="form-group">
+    <label>Project</label>
+    <select name="project" ng-options="project as project.name for project
+    in vm.projects track by project.name" required="true" class="form-control" ng-model="config.project">
+      <option value="" disabled>Select your project</option>
+    </select>
+  </div>
+   <div class="form-group" ng-if="config.project">
+    <label>My Custom-Queries</label>
+     <span class="glyphicon glyphicon-info-sign" uib-tooltip="EasyRedmine only supports custom queries that are not restricted to a specific project. This can be achieved in the configuration for a custom query by enabling 'for all projects' instead of a specific project."></span>
+     <select name="customQuery" ng-options="customQuery as customQuery.name for customQuery
+    in vm.customQueries track by customQuery.name" required="true" class="form-control" ng-model="config.customQuery">
+      <option value="" disabled>Select your query</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <input type="checkbox"
+           name="showClosed"
+           ng-model="config.showClosed">
+    Show closed issues
+  </div>
+  <div class="form-group">
+    <label >Columns to show</label>
+    <li class="list-group-item" ng-repeat="(key, entry) in vm.possibleColumns">
+      <input type="checkbox"
+             name={{key}}
+             ng-model="config.columns[key].show">
+      {{entry.name}}
+    </li>
+  </div>
+</form>

@@ -3,6 +3,7 @@ var connect = require('gulp-connect');
 var wiredep = require('wiredep').stream;
 var $ = require('gulp-load-plugins')();
 var del = require('del');
+var addsrc = require('gulp-add-src');
 var jsReporter = require('jshint-stylish');
 var annotateAdfPlugin = require('ng-annotate-adf-plugin');
 var pkg = require('./package.json');
@@ -13,9 +14,13 @@ var annotateOptions = {
   ]
 };
 
-var templateOptions = {
+var redmineTemplate = {
   root: '{widgetsPath}/redmine/src/main',
   module: 'adf.widget.redmine'
+};
+var easyRedmineTemplate = {
+  root: '{widgetsPath}/redmine/src/main',
+  module: 'adf.widget.easyredmine'
 };
 
 /** lint **/
@@ -36,13 +41,19 @@ gulp.task('lint', ['csslint', 'jslint']);
 
 /** serve **/
 
-gulp.task('templates', function(){
-  return gulp.src('src/**/*.html')
-             .pipe($.angularTemplatecache('templates.tpl.js', templateOptions))
-             .pipe(gulp.dest('.tmp/dist'));
+gulp.task('redmineTemplate', function(){
+  return gulp.src('src/main/**/*.html')
+    .pipe($.angularTemplatecache('redmineTemplates.tpl.js', redmineTemplate))
+    .pipe(gulp.dest('.tmp/dist'));
 });
 
-gulp.task('sample', ['templates'], function(){
+gulp.task('easyRedmineTemplate', function(){
+  return gulp.src('src/main/**/*.html')
+    .pipe($.angularTemplatecache('easyRedmineTemplates.tpl.js', easyRedmineTemplate))
+    .pipe(gulp.dest('.tmp/dist'));
+});
+
+gulp.task('sample', ['redmineTemplate', 'easyRedmineTemplate'], function(){
   var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js'])
                   .pipe($.if('*.js', $.angularFilesort()));
 
@@ -85,7 +96,10 @@ gulp.task('css', function(){
 gulp.task('js', function() {
   gulp.src(['src/main/**/*.js', 'src/main/**/*.html'])
       .pipe($.if('*.html', $.minifyHtml()))
-      .pipe($.if('*.html', $.angularTemplatecache(pkg.name + '.tpl.js', templateOptions)))
+      .pipe($.if('*.html', $.angularTemplatecache(pkg.name + '.js', redmineTemplate)))
+      .pipe(addsrc('src/main/**/*.html')) //Add again for easyredmine as angularTemplatecache purges all html files from the pipe
+      .pipe($.if('*.html', $.minifyHtml()))
+      .pipe($.if('*.html', $.angularTemplatecache('adf-widget-redmine.js', easyRedmineTemplate)))
       .pipe($.angularFilesort())
       .pipe($.if('*.js', $.replace(/'use strict';/g, '')))
       .pipe($.concat(pkg.name + '.js'))
