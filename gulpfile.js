@@ -54,8 +54,7 @@ gulp.task('easyRedmineTemplate', function(){
 });
 
 gulp.task('sample', ['redmineTemplate', 'easyRedmineTemplate'], function(){
-  var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js'])
-                  .pipe($.if('*.js', $.angularFilesort()));
+  var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js']);
 
   gulp.src('sample/index.html')
       .pipe(wiredep({
@@ -100,7 +99,6 @@ gulp.task('js', function() {
       .pipe(addsrc('src/main/**/*.html')) //Add again for easyredmine as angularTemplatecache purges all html files from the pipe
       .pipe($.if('*.html', $.minifyHtml()))
       .pipe($.if('*.html', $.angularTemplatecache('adf-widget-redmine.js', easyRedmineTemplate)))
-      .pipe($.angularFilesort())
       .pipe($.if('*.js', $.replace(/'use strict';/g, '')))
       .pipe($.concat(pkg.name + '.js'))
       .pipe($.headerfooter('(function(window, undefined) {\'use strict\';\n', '})(window);'))
