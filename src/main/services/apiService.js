@@ -50,7 +50,6 @@ ApiService.prototype.getIssuesForChart = function(config) {
 
 ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
   var allIssues = [];
-  var q = this.q;
   return this.collectPageIssues(params, 0).then(function (issues) {
     angular.forEach(issues.issues, function (issue) {
       allIssues.push(issue);
@@ -60,7 +59,7 @@ ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
       requests.push(this.collectPageIssues(params, i));
     }
     if (params.length > 0) {
-      return q.all(requests).then(function (responses) {
+      return this.q.all(requests).then(function (responses) {
         angular.forEach(responses, function (response) {
           angular.forEach(response.issues, function (issue) {
             allIssues.push(issue);
@@ -71,8 +70,9 @@ ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
     } else {
       return allIssues;
     }
-  });
+  }.bind(this));
 };
+
 
 ApiService.prototype.collectPageIssues = function (params, offset) {
   return this.request('issues.json' + params + '&offset=' + offset).then(function (issues) {

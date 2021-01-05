@@ -99,6 +99,7 @@ gulp.task('js', function() {
       .pipe(addsrc('src/main/**/*.html')) //Add again for easyredmine as angularTemplatecache purges all html files from the pipe
       .pipe($.if('*.html', $.minifyHtml()))
       .pipe($.if('*.html', $.angularTemplatecache('adf-widget-redmine.js', easyRedmineTemplate)))
+      .pipe($.angularFilesort())
       .pipe($.if('*.js', $.replace(/'use strict';/g, '')))
       .pipe($.concat(pkg.name + '.js'))
       .pipe($.headerfooter('(function(window, undefined) {\'use strict\';\n', '})(window);'))
