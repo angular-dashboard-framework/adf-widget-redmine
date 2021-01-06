@@ -54,8 +54,7 @@ gulp.task('easyRedmineTemplate', function(){
 });
 
 gulp.task('sample', ['redmineTemplate', 'easyRedmineTemplate'], function(){
-  var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js'])
-                  .pipe($.if('*.js', $.angularFilesort()));
+  var files = gulp.src(['src/main/**/*.js', 'src/main/**/*.css', 'src/main/**/*.less', '.tmp/dist/*.js']);
 
   gulp.src('sample/index.html')
       .pipe(wiredep({
