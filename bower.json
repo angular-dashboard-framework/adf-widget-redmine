@@ -21,7 +21,7 @@
   ],
   "description": "description",
   "dependencies": {
-    "angular-dashboard-framework": ">=0.10",
+    "angular-dashboard-framework": "git://github.com/cloudogu/angular-dashboard-framework.git#main",
     "moment": "^2.18.1",
     "angular-chart.js": "^1.1.1"
 

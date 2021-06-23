@@ -73,7 +73,7 @@
               }]
             })
         }).controller('dashboardController', function($scope, localStorageService){
-        var model = localStorageService.get('widgetSampleDashboard');
+        let model = localStorageService.get('widgetSampleDashboard');
         if (!model){
           model = {};
         }

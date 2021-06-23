@@ -1,8 +1,11 @@
 'use strict';
 
-function createEditChartController(vm, projects, config, chartDataService, apiService) {
+function createEditChartController(vm, projects, config, chartDataService, apiService,  $scope, $sce) {
   vm.config = config;
   vm.projects = projects;
+  // tooltips
+  $scope.showIdealTooltip = $sce.trustAsHtml('<b>OPTIONAL</b><br>If checked displays an ideal line on the chart');
+
   // functions
   vm.addFilter = addFilter;
   vm.converStringsToDateObjects = converStringsToDateObjects;
