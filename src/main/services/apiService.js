@@ -8,12 +8,17 @@ function ApiService($http, apiEndpoint, apiEndpointRedirect, $q) {
 }
 
 ApiService.prototype.request = function (param) {
+
+  //auth = new Buffer(auth).toString('base64');
+  //const auth = $base64.encode('foo:bar'),
+  //  headers = {'Authorization': 'Basic ' + auth};
+
   return this.http.get(this.apiEndpoint + param).then(function (response) {
     return response.data;
   });
 };
 
-ApiService.prototype.getProjects = function(){
+ApiService.prototype.getProjects = function () {
   return this.request('projects.json').then(function (data) {
     return data.projects;
   });
@@ -29,9 +34,10 @@ ApiService.prototype.getIssues = function (config) {
   var params = this.generateGeneralIssuesParameters(config);
   var limit = config.limit ? config.limit : Number.MAX_SAFE_INTEGER;
   return this.getIssuesWithParamsAndLimit(params, limit);
+
 };
 
-ApiService.prototype.getIssuesForChart = function(config) {
+ApiService.prototype.getIssuesForChart = function (config) {
   var allIssues = [];
   var limit = config.limit ? config.limit : Number.MAX_SAFE_INTEGER;
   var params1 = this.generateParametersForIssuesOpenOnEnd(config);
@@ -58,6 +64,7 @@ ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
     for (var i = 100; i < issues.total_count && i < limit; i = i + 100) {
       requests.push(this.collectPageIssues(params, i));
     }
+
     if (params.length > 0) {
       return this.q.all(requests).then(function (responses) {
         angular.forEach(responses, function (response) {
@@ -66,6 +73,8 @@ ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
           });
         });
         return allIssues;
+      }).catch(function (error) {
+        return {error: error};
       });
     } else {
       return allIssues;
@@ -75,9 +84,12 @@ ApiService.prototype.getIssuesWithParamsAndLimit = function (params, limit) {
 
 
 ApiService.prototype.collectPageIssues = function (params, offset) {
-  return this.request('issues.json' + params + '&offset=' + offset).then(function (issues) {
-    return issues;
-  });
+  return this.request('issues.json' + params + '&offset=' + offset)
+    .then(function (issues) {
+      return issues;
+    }).catch(function (error) {
+      return {error: error};
+    });
 };
 
 ApiService.prototype.generateParametersForIssuesOpenOnEnd = function (data) {
@@ -160,5 +172,7 @@ ApiService.prototype.getTrackers = function () {
 ApiService.prototype.getMyIssues = function () {
   return this.request('issues.json?assigned_to_id=me').then(function (data) {
     return data;
+  }).catch(function (error) {
+    return {error: error};
   });
 };

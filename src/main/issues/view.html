@@ -21,11 +21,14 @@
 
 
 </style>
-<div class="alert alert-info" ng-if="!vm.issues">
+<div class="alert alert-info" ng-if="!vm.issues && !vm.error">
   Please configure the widget
 </div>
+<div class="alert alert-danger" ng-if="vm.error ">
+  <span ng-if='vm.error.status == 404'> Service returned status {{vm.error.status}}. Make sure your endpoint is reachable.</span>
+</div>
 <div class="alert alert-info" ng-if="vm.issues && !vm.issues[0].id">
-  No issues found
+  No issues found.
 </div>
 <div ng-if="vm.issues && vm.issues[0].id" class="x-scrollable">
   <table class="table table-fixed">

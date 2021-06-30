@@ -24,7 +24,14 @@ function createIssueController(vm, issues, config, apiService) {
     if (issues.issues) {
       vm.issues = vm.issues.issues;
     }
+
+    if(issues.error){
+      vm.error = issues.error;
+      vm.issues = null;
+    }
   }
+
+
 
   var redirectEndpoint = apiService.getRedmineRedirectEndpoint();
   if (!redirectEndpoint) {
@@ -38,7 +45,6 @@ function createIssueController(vm, issues, config, apiService) {
     vm.order = order;
     vm.reverse = !vm.reverse;
   };
-
 }
 
 angular.module('adf.widget.redmine')

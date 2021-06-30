@@ -1,6 +1,17 @@
+<style type="text/css">
+  p > .glyphicon-info-sign {
+    margin-left: 3px;
+  }
+</style>
+
+<div class="alert alert-danger" ng-if="vm.error ">
+  <span ng-if='vm.error.status == 404'> Service returned status {{vm.error.status}}. Make sure your endpoint is reachable.</span>
+</div>
 <div class="alert alert-info" ng-if="!vm.config.project">
   Please configure the widget
 </div>
+
 <div ng-if="vm.chart && vm.config.project">
-  <canvas id="line" class="chart chart-line" chart-data="vm.chart.data" chart-series="vm.chart.series" chart-options="vm.chart.options"></canvas>
+  <canvas id="line" class="chart chart-line" chart-data="vm.chart.data" chart-series="vm.chart.series"
+          chart-options="vm.chart.options"></canvas>
 </div>

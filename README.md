@@ -4,19 +4,19 @@ redmine widget for the [angular-dashboard-framework](https://github.com/sdorra/a
 
 ## Build
 
-The widget is build with the help of [node](https://nodejs.org/), [npm](https://www.npmjs.com/), [bower](http://bower.io/) and [gulp](http://gulpjs.com/). For a install instruction for node and npm, please have a look [here](https://docs.npmjs.com/getting-started/installing-node).
+The widget is build with the help of [node](https://nodejs.org/), [yarn](https://yarnpkg.com/), [bower](http://bower.io/) and [gulp](http://gulpjs.com/). For a install instruction for node please have a look [here](https://docs.npmjs.com/getting-started/installing-node).
 
 #### Installing bower and gulp
 
 ```bash
-npm install -g bower
-npm install -g gulp
+yarn install -g bower
+yarn install -g gulp
 ```
 
 #### Installing dependencies
 
 ```bash
-npm install
+yarn install
 bower install
 ```
 
@@ -40,6 +40,27 @@ Each goal can be used as parameter for the gulp command.
 * *clean*: removes the dist folder
 * *lint*: checks css and javascript files for common errors
 * *serve*: starts an webserver to test the widget
+
+## Development
+
+* Start redmine your local ecosystem with installed redmine/easyredmine.
+
+* At the end of `easyRedmineService.js` and `redmineService.js` remove the comments around
+  ```js
+  config(function($httpProvider) {
+  $httpProvider.defaults.headers.common['Authorization'] = 'Basic ' + 'BASE64HERE=';
+  })
+  ```
+  and replace "BASE64HERE" with a base64 hashed combination of `username:password`.
+  
+
+* Open a terminal and start an unsafe chrome-tab with (otherwise you will get CORS errors) with this line: 
+`google-chrome --disable-web-security --user-data-dir=~/chromeTemp`
+<!--- https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome -->
+
+* Navigate to your local ecosystem and log in with the same credentials used in the step before. Then run `gulp serve` and navigate to the displayed URL (likely`localhost:9002`).
+
+Live reload should be enabled.
 
 ## Usage
 

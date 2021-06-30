@@ -9,7 +9,8 @@
   ],
   "description": "description",
   "dependencies": {
-    "phantomjs-prebuilt": "^2.1.16"
+    "phantomjs-prebuilt": "^2.1.16",
+    "proxy-middleware": "^0.15.0"
   },
   "devDependencies": {
     "del": "^1.1.1",

@@ -1,6 +1,12 @@
 <form role="form">
    <div class="form-group">
     <label >My Custom-Queries</label>
+     <span class="grey glyphicon glyphicon-info-sign ng-scope" tabindex="0"
+           ng-focus="customQueryTooltipIsOpen = !customQueryTooltipIsOpen" tooltip-trigger="outsideClick"
+           tooltip-is-open="customQueryTooltipIsOpen"
+           uib-tooltip-html="customQueryTooltip" tooltip-trigger="'outsideClick'" tooltip-is-open="customQueryTooltipIsOpen"
+           ng-mouseover="customQueryTooltipIsOpen = !customQueryTooltipIsOpen" tooltip-placement="top"
+           aria-label="Select a custom query"></span>
     <select name="customQuery" ng-options="customQuery as customQuery.name for customQuery
     in vm.customQueries track by customQuery.name" required="true" class="form-control" ng-model="config.customQuery">
       <option value="" disabled>Select your query</option>
@@ -14,6 +20,15 @@
   </div>
   <div class="form-group">
     <label >Columns to show</label>
+    <span class="grey glyphicon glyphicon-info-sign ng-scope"
+          tabindex="0"
+          ng-focus="columnsTooltipIsOpen = !columnsTooltipIsOpen"
+          tooltip-trigger="outsideClick"
+          tooltip-is-open="columnsTooltipIsOpen"
+          ng-mouseenter="columnsTooltipIsOpen = !columnsTooltipIsOpen"
+          uib-tooltip="Select the columns that should be displayed"
+          tooltip-placement="top"
+          aria-label="Select the columns that should be displayed"></span>
     <li class="list-group-item" ng-repeat="(key, entry) in vm.possibleColumns">
       <input type="checkbox"
              name={{key}}

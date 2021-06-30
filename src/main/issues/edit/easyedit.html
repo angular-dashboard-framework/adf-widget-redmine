@@ -1,6 +1,15 @@
 <form role="form">
   <div class="form-group">
     <label>Project</label>
+    <span class="grey glyphicon glyphicon-info-sign ng-scope"
+          tabindex="0"
+          ng-focus="projectTooltipIsOpen = !projectTooltipIsOpen"
+          tooltip-trigger="outsideClick"
+          tooltip-is-open="projectTooltipIsOpen"
+          ng-mouseenter="projectTooltipIsOpen = !projectTooltipIsOpen"
+          uib-tooltip="Choose a project"
+          tooltip-placement="top"
+          aria-label="Choose a project"></span>
     <select name="project" ng-options="project as project.name for project
     in vm.projects track by project.name" required="true" class="form-control" ng-model="config.project">
       <option value="" disabled>Select your project</option>
